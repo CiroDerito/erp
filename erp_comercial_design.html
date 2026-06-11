@@ -1,0 +1,1535 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERP Comercial - Diseno UI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sidebar-bg: #111827;
+    --sidebar-border: rgba(255,255,255,0.08);
+    --navy: #111827;
+    --navy-mid: #1F2937;
+    --navy-light: #374151;
+    --accent: #7C3AED;
+    --accent-soft: rgba(124, 58, 237, 0.12);
+    --accent-glow: rgba(124, 58, 237, 0.08);
+    --green: #16A34A;
+    --green-soft: rgba(22, 163, 74, 0.12);
+    --amber: #D97706;
+    --amber-soft: rgba(217, 119, 6, 0.12);
+    --red: #DC2626;
+    --red-soft: rgba(220, 38, 38, 0.12);
+    --purple: #7C3AED;
+    --page-bg: #F3F4F6;
+    --card-bg: #FFFFFF;
+    --text-primary: #111827;
+    --text-secondary: #6B7280;
+    --text-muted: #9CA3AF;
+    --border: #E5E7EB;
+    --border-hover: #D1D5DB;
+    --surface: #F9FAFB;
+    --surface-hover: #F3F4F6;
+    --sidebar-text: #F9FAFB;
+    --sidebar-text-muted: rgba(255,255,255,0.55);
+    --sidebar-text-dim: rgba(255,255,255,0.35);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --sidebar-w: 220px;
+    --topbar-h: 56px;
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--page-bg);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* --- LAYOUT WRAPPER --- */
+  .screens-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: var(--border);
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  .screen-full {
+    width: 100%;
+  }
+  .screen-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 14px 20px 10px;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .screen-label span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* --- SHARED COMPONENTS --- */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    color: var(--sidebar-text);
+  }
+  .sidebar-logo {
+    padding: 18px 20px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--sidebar-border);
+  }
+  .logo-icon {
+    width: 30px; height: 30px;
+    background: var(--accent);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-icon svg { width: 16px; height: 16px; }
+  .logo-text { font-size: 13px; font-weight: 600; line-height: 1.3; color: var(--sidebar-text); }
+  .logo-sub { font-size: 10px; color: var(--sidebar-text-dim); font-weight: 400; }
+  .sidebar-nav { padding: 12px 10px; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .nav-section-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--sidebar-text-dim);
+    padding: 8px 10px 4px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: var(--radius-sm);
+    font-size: 13px; color: var(--sidebar-text-muted); cursor: pointer;
+    transition: all 0.15s; text-decoration: none;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.06); color: var(--sidebar-text); }
+  .nav-item.active { background: var(--accent); color: #fff; }
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.85; }
+  .nav-item.active svg { opacity: 1; color: #fff; stroke: #fff; }
+  .nav-badge {
+    margin-left: auto; font-size: 10px; font-weight: 600;
+    background: var(--red); color: #fff; padding: 1px 6px;
+    border-radius: 20px; line-height: 1.6;
+  }
+  .sidebar-footer {
+    padding: 12px 10px;
+    border-top: 1px solid var(--sidebar-border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; color: #fff; }
+  .avatar-info { flex: 1; min-width: 0; }
+  .avatar-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--sidebar-text); }
+  .avatar-role { font-size: 10px; color: var(--sidebar-text-muted); }
+
+  .topbar {
+    height: var(--topbar-h); background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 20px; gap: 14px;
+  }
+  .topbar-menu {
+    width: 34px; height: 34px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); cursor: default;
+  }
+  .topbar-menu svg { width: 16px; height: 16px; }
+  .topbar-title { font-size: 15px; font-weight: 600; }
+  .topbar-spacer { flex: 1; }
+  .topbar-diate {
+    font-size: 12px; color: var(--text-secondary);
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 5px 10px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .topbar-diate svg { width: 13px; height: 13px; opacity: 0.6; }
+  .topbar-btn {
+    width: 30px; height: 30px; border-radius: var(--radius-sm);
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    color: var(--text-secondary);
+  }
+  .topbar-btn svg { width: 14px; height: 14px; }
+  .topbar-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; }
+
+  .app-shell { display: flex; height: 100%; }
+  .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; background: var(--card-bg); }
+  .page-content { flex: 1; overflow: auto; padding: 20px; background: var(--page-bg); }
+
+  /* --- STAT CARDS --- */
+  .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 20px; }
+  @media (max-width: 1100px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 700px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 16px 18px;
+    box-shadow: var(--shadow-card);
+  }
+  .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; margin-bottom: 6px; }
+  .stat-value { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 4px; }
+  .stat-change { font-size: 10px; font-weight: 500; display: flex; align-items: center; gap: 3px; }
+  .stat-change.up { color: var(--green); }
+  .stat-change.down { color: var(--red); }
+  .stat-change svg { width: 10px; height: 10px; }
+
+  /* --- CHART AREA --- */
+  .chart-section { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+  .chart-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 16px;
+    box-shadow: var(--shadow-card);
+    width: 100%;
+  }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .card-title { font-size: 12px; font-weight: 600; }
+  .chart-card--embed {
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  .chart-ventas-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-width: 100%;
+  }
+  .card-action {
+    font-size: 12px; color: #4B5563;
+    background: #fff; border: 1px solid #E5E7EB;
+    padding: 6px 10px; border-radius: 8px;
+    display: flex; align-items: center; gap: 6px; cursor: default;
+    font-weight: 500;
+  }
+  .card-action svg { width: 12px; height: 12px; color: #9CA3AF; }
+
+  /* Donut */
+  .donut-wrap { display: flex; flex-direction: column; align-items: center; padding-top: 8px; }
+  .donut-svg { width: 100px; height: 100px; }
+  .donut-legend { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 10px; }
+  .legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { color: var(--text-secondary); flex: 1; }
+  .legend-val { font-weight: 500; }
+
+  /* Alerts */
+  .alert-list { display: flex; flex-direction: column; gap: 7px; }
+  .alert-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 10px; border-radius: var(--radius-sm);
+    font-size: 11px;
+  }
+  .alert-item.warn { background: var(--amber-soft); }
+  .alert-item.dianger { background: var(--red-soft); }
+  .alert-item.info { background: var(--accent-glow); }
+  .alert-icon { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; }
+  .alert-text { flex: 1; line-height: 1.4; color: var(--text-secondary); }
+  .alert-link { font-size: 10px; font-weight: 600; color: var(--accent); cursor: pointer; white-space: nowrap; }
+
+  /* --- TABLE --- */
+  .table-section { display: flex; flex-direction: column; gap: 16px; }
+  .table-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-md); overflow: hidden;
+    box-shadow: var(--shadow-card);
+    width: 100%;
+  }
+  .table-head { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .table-title { font-size: 12px; font-weight: 600; }
+  .table-link { font-size: 11px; color: var(--accent); cursor: pointer; }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); padding: 8px 16px; text-align: left; border-bottom: 1px solid var(--border); background: var(--surface); }
+  td { font-size: 12px; padding: 9px 16px; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface-hover); }
+  td.primary { color: var(--text-primary); font-weight: 500; }
+  td.mono { font-family: var(--mono); font-size: 11px; }
+
+  /* Tabla dashboard "Ultimas ventas" (referencia maqueta) */
+  .table-diash { border-collapse: collapse; }
+  .table-diash thead th {
+    background: #F3F4F6;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #E5E7EB;
+    white-space: nowrap;
+  }
+  .table-diash thead th:nth-child(4),
+  .table-diash thead th:nth-child(5),
+  .table-diash thead th:nth-child(7) { text-align: right; }
+  .table-diash thead th:nth-child(6),
+  .table-diash thead th:nth-child(8) { text-align: center; }
+  .table-diash tbody td {
+    font-size: 13px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #F3F4F6;
+    color: #374151;
+    vertical-align: middle;
+    background: #fff;
+  }
+  .table-diash tbody tr:last-child td { border-bottom: none; }
+  .table-diash tbody tr:hover td { background: #FAFAFA; }
+  .table-diash td:nth-child(1),
+  .table-diash td:nth-child(2),
+  .table-diash td:nth-child(3) { text-align: left; }
+  .table-diash td:nth-child(4),
+  .table-diash td:nth-child(5),
+  .table-diash td:nth-child(7) {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: #111827;
+    font-variant-numeric: tabular-nums;
+  }
+  .table-diash td:nth-child(6),
+  .table-diash td:nth-child(8) { text-align: center; }
+  .table-diash td.primary { font-family: var(--font); font-size: 13px; font-weight: 500; color: #111827; }
+  .table-diash .table-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid #E5E7EB;
+  }
+  .table-diash-wrap .table-title { font-size: 14px; font-weight: 700; color: #111827; }
+
+  /* Badges */
+  .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; }
+  .badge-green { background: var(--green-soft); color: var(--green); }
+  .badge-amber { background: var(--amber-soft); color: var(--amber); }
+  .badge-red { background: var(--red-soft); color: var(--red); }
+  .table-diash .badge {
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    justify-content: center;
+    min-width: 4.5rem;
+  }
+  .table-diash .badge-green { background: #DCFCE7; color: #166534; }
+  .table-diash .badge-amber { background: #FFEDD5; color: #C2410C; }
+  .table-diash .badge-red { background: #FEE2E2; color: #B91C1C; }
+  .badge-blue { background: var(--accent-soft); color: var(--accent); }
+  .currency-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 42px; padding: 3px 8px; border-radius: 6px; background: #EEF2FF; color: #4338CA; font-size: 10px; font-weight: 700; letter-spacing: .04em; }
+  .currency-stack { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .currency-chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 7px; border-radius: 6px; background: var(--surface); border: 1px solid var(--border); font-size: 10px; color: var(--text-secondary); }
+  .insight-strip { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin-bottom: 16px; border: 1px solid #FED7AA; background: #FFF7ED; border-radius: var(--radius-md); color: #9A3412; font-size: 12px; font-weight: 600; }
+  .insight-strip svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  /* Top products */
+  .top-products { display: flex; flex-direction: column; gap: 1px; }
+  .product-row {
+    display: flex; align-items: center; gap: 10px; padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .product-row:last-child { border-bottom: none; }
+  .product-rank { font-size: 11px; color: var(--text-muted); font-family: var(--mono); width: 16px; text-align: center; }
+  .product-name { flex: 1; font-size: 12px; color: var(--text-secondary); }
+  .product-count { font-size: 12px; font-weight: 600; font-family: var(--mono); color: var(--text-primary); }
+  .product-bar { width: 48px; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .product-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; }
+
+  /* --- LOGIN (pantalla completa, split) --- */
+  .login-split {
+    display: flex;
+    min-height: 520px;
+    width: 100%;
+    background: var(--card-bg);
+  }
+  .login-brand {
+    flex: 0 0 34%;
+    min-width: 260px;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    text-align: center;
+  }
+  .login-brand-icon {
+    width: 48px; height: 48px;
+    background: var(--accent);
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .login-brand-icon svg { width: 24px; height: 24px; }
+  .login-brand-title { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+  .login-brand-sub { font-size: 14px; color: var(--sidebar-text-muted); margin-top: 8px; font-weight: 400; }
+  .login-form-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    background: var(--card-bg);
+  }
+  .login-form-inner {
+    width: 100%;
+    max-width: 380px;
+  }
+  .login-screen-legacy { display: none; }
+  .login-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; color: var(--text-primary); }
+  .login-subtitle { font-size: 14px; color: var(--text-secondary); margin-bottom: 28px; }
+  .form-group { margin-bottom: 16px; }
+  .form-label { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; display: block; }
+  .form-input {
+    width: 100%; background: var(--card-bg);
+    border: 1px solid var(--border-hover); border-radius: var(--radius-md);
+    padding: 10px 12px; font-size: 14px; color: var(--text-primary);
+    font-family: var(--font); outline: none;
+  }
+  .form-input::placeholder { color: var(--text-muted); }
+  .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .form-input-wrap { position: relative; }
+  .form-input-icon {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted);
+  }
+  .form-input-icon svg { width: 16px; height: 16px; }
+  .form-options { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+  .checkbox-label { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+  .checkbox { width: 16px; height: 16px; border: 1.5px solid var(--border-hover); border-radius: 4px; background: var(--card-bg); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+  .forgot-link { font-size: 13px; color: var(--accent); cursor: pointer; font-weight: 500; }
+  .btn-primary {
+    width: 100%; padding: 12px; background: var(--accent);
+    border-radius: var(--radius-md); font-size: 14px; font-weight: 600;
+    color: #fff; border: none; cursor: pointer; letter-spacing: 0.01em;
+    font-family: var(--font);
+  }
+  .btn-primary:hover { filter: brightness(1.05); }
+
+  /* --- VENTAS TABLE --- */
+  .search-bar {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 0 12px; height: 34px;
+    flex: 1; max-width: 320px;
+  }
+  .search-bar svg { width: 13px; height: 13px; color: var(--text-muted); flex-shrink: 0; }
+  .search-bar input {
+    background: none; border: none; outline: none;
+    font-size: 12px; color: var(--text-primary); flex: 1;
+    font-family: var(--font);
+  }
+  .search-bar input::placeholder { color: var(--text-muted); }
+  .toolbar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .toolbar-spacer { flex: 1; }
+  .btn-outline {
+    display: flex; align-items: center; gap: 5px;
+    padding: 5px 10px; border: 1px solid var(--border-hover);
+    border-radius: var(--radius-sm); font-size: 11px; font-weight: 500;
+    color: var(--text-secondary); background: none; cursor: pointer;
+    font-family: var(--font);
+  }
+  .btn-outline svg { width: 12px; height: 12px; }
+  .btn-accent {
+    display: flex; align-items: center; gap: 5px;
+    padding: 5px 12px; background: var(--accent);
+    border-radius: var(--radius-sm); font-size: 11px; font-weight: 600;
+    color: #fff; border: none; cursor: pointer; font-family: var(--font);
+  }
+  .btn-accent svg { width: 12px; height: 12px; }
+  .pagination {
+    display: flex; align-items: center; justify-content: center;
+    gap: 4px; padding: 10px 16px; border-top: 1px solid var(--border);
+    background: var(--card-bg);
+  }
+  .page-btn {
+    width: 26px; height: 26px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; cursor: pointer; color: var(--text-secondary);
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+  }
+  .page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .page-btn svg { width: 11px; height: 11px; }
+
+  /* --- NEW SALE FORM --- */
+  .form-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .select-field {
+    width: 100%; background: var(--surface);
+    border: 1px solid var(--border-hover); border-radius: var(--radius-sm);
+    padding: 7px 10px; font-size: 12px; color: var(--text-primary);
+    font-family: var(--font); outline: none; appearance: none;
+  }
+  .product-table-wrap { margin-top: 12px; }
+  .product-table-header {
+    display: grid; grid-template-columns: 2fr 60px 90px 90px 28px;
+    gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border);
+  }
+  .col-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+  .product-row-form {
+    display: grid; grid-template-columns: 2fr 60px 90px 90px 28px;
+    gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+  .product-cell { font-size: 12px; color: var(--text-secondary); }
+  .product-cell.mono { font-family: var(--mono); font-size: 11px; }
+  .qty-input {
+    width: 100%; background: var(--surface);
+    border: 1px solid var(--border-hover); border-radius: var(--radius-sm);
+    padding: 4px 6px; font-size: 11px; color: var(--text-primary);
+    font-family: var(--mono); text-align: center; outline: none;
+  }
+  .remove-btn {
+    width: 22px; height: 22px; border-radius: var(--radius-sm);
+    background: var(--red-soft); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--red);
+  }
+  .remove-btn svg { width: 11px; height: 11px; }
+  .add-product-btn {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; color: var(--accent);
+    background: none; border: none; cursor: pointer;
+    padding: 8px 0; font-family: var(--font);
+  }
+  .add-product-btn svg { width: 13px; height: 13px; }
+  .add-product-row { display: grid; grid-template-columns: minmax(220px, 1fr) auto; gap: 8px; align-items: center; padding-top: 10px; }
+  .summary-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 14px;
+  }
+  .summary-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 12px; }
+  .summary-row .label { color: var(--text-secondary); }
+  .summary-row.total { border-top: 1px solid var(--border); margin-top: 6px; padding-top: 10px; }
+  .summary-row.total .label { font-weight: 600; color: var(--text-primary); font-size: 13px; }
+  .summary-row.total .value { font-size: 16px; font-weight: 700; color: var(--accent); font-family: var(--mono); }
+  .pay-section { margin-top: 12px; }
+  .pay-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 12px; }
+  .pay-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+
+  /* --- CLIENT DETAIL --- */
+  .client-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px; border-bottom: 1px solid var(--border); background: var(--card-bg); }
+  .client-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--purple); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+  .client-name { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .client-contact { display: flex; flex-direction: column; gap: 3px; }
+  .contact-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-secondary); }
+  .contact-item svg { width: 12px; height: 12px; }
+  .client-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; border-bottom: 1px solid var(--border); background: var(--border); }
+  .client-stat { padding: 12px 14px; background: var(--surface); }
+  .client-stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .client-stat-val { font-size: 14px; font-weight: 600; font-family: var(--mono); }
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: var(--card-bg); }
+  .tab {
+    padding: 10px 16px; font-size: 12px; font-weight: 500;
+    color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* --- PAGOS --- */
+  .method-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; }
+  .method-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* --- REGISTER PAYMENT --- */
+  .register-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding: 16px; }
+  .register-bottom { padding: 0 16px 16px; display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 12px; }
+  .amount-input-wrap { position: relative; }
+  .amount-prefix { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+  .amount-input {
+    width: 100%; background: var(--surface);
+    border: 1px solid var(--border-hover); border-radius: var(--radius-sm);
+    padding: 8px 10px 8px 22px; font-size: 14px; font-weight: 600;
+    color: var(--text-primary); font-family: var(--mono); outline: none;
+  }
+  .save-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px; background: var(--green);
+    border-radius: var(--radius-sm); font-size: 12px; font-weight: 600;
+    color: #0A1A10; border: none; cursor: pointer; font-family: var(--font);
+  }
+  .save-btn svg { width: 13px; height: 13px; }
+
+  /* --- PAGE HEADER --- */
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .page-header-title { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+  .page-header-sub { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+
+  /* --- SPACING --- */
+  .mt-4 { margin-top: 4px; }
+  .mt-8 { margin-top: 8px; }
+  .mt-12 { margin-top: 12px; }
+  .gap-8 { gap: 8px; }
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+
+  /* --- SCREEN CONTAINER --- */
+  .screen-wrap { background: var(--page-bg); overflow: hidden; }
+  .screen-wrap-diark { background: var(--sidebar-bg); overflow: hidden; }
+
+  .modal-topbar {
+    height: 46px; background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 16px; gap: 10px;
+  }
+  .modal-topbar-title { font-size: 14px; font-weight: 600; }
+  .modal-topbar-spacer { flex: 1; }
+
+  /* SECTION DIVIDER */
+  .section-divider {
+    padding: 18px 20px 12px;
+    background: var(--surface);
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+  }
+
+  /* Pantalla registrar pago (vista pagina, no modal oscuro) */
+  .register-page-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 20px 32px;
+  }
+  .register-page-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .mini-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 16px 14px; }
+  .mini-summary-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 14px; box-shadow: var(--shadow-card); }
+  .mini-summary-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+  .mini-summary-value { font-size: 16px; font-weight: 700; font-family: var(--mono); }
+  .qr-panel { display: grid; grid-template-columns: 420px 1fr; gap: 14px; margin: 0 16px 14px; align-items: stretch; }
+  .scanner-card { min-height: 132px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--card-bg); box-shadow: var(--shadow-card); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .scanner-actions { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; }
+  .scanner-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    min-height: 36px; padding: 8px 12px; border: none; border-radius: var(--radius-sm);
+    background: var(--accent); color: #fff; font-family: var(--font); font-size: 12px; font-weight: 700;
+  }
+  .scanner-btn svg { width: 14px; height: 14px; }
+  .scan-input {
+    width: 100%; min-height: 36px; border: 1px solid var(--border-hover); border-radius: var(--radius-sm);
+    background: var(--surface); padding: 8px 10px; color: var(--text-primary); font-family: var(--mono); font-size: 12px; outline: none;
+  }
+  .scan-input::placeholder { color: var(--text-muted); font-family: var(--font); }
+  .scanner-status { display: flex; justify-content: space-between; gap: 10px; padding: 9px 10px; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border); font-size: 11px; color: var(--text-secondary); }
+  .scanner-status strong { color: var(--text-primary); font-family: var(--mono); font-weight: 700; }
+  .stock-form-card { margin: 0 16px 14px; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); overflow: hidden; }
+  .stock-form-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+  .stock-form-title { font-size: 13px; font-weight: 700; }
+  .stock-form-grid { display: grid; grid-template-columns: 1.25fr 1.25fr 1fr .8fr .85fr .75fr .8fr; gap: 10px; padding: 14px; align-items: end; }
+</style>
+</head>
+<body>
+
+<div style="padding: 0; background: var(--page-bg);">
+
+  <!-- HEADER PRESENTATION -->
+  <div style="padding: 40px 40px 28px; background: var(--card-bg); border-bottom: 1px solid var(--border);">
+    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+      <div style="width: 40px; height: 40px; background: #7C3AED; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <div>
+        <div style="font-size: 24px; font-weight: 700; letter-spacing: -0.03em; color: #111827;">ERP Comercial</div>
+        <div style="font-size: 13px; color: #6B7280;">Sistema de gestion empresarial - UI Design v2.1</div>
+      </div>
+    </div>
+    <div style="display: flex; gap: 16px; margin-top: 20px; flex-wrap: wrap;">
+      <div style="background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2); border-radius: 8px; padding: 8px 14px; font-size: 11px; color: #6D28D9; font-weight: 500;">9 pantallas</div>
+      <div style="background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.2); border-radius: 8px; padding: 8px 14px; font-size: 11px; color: #15803D; font-weight: 500;">Tema claro</div>
+      <div style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 8px 14px; font-size: 11px; color: #1D4ED8; font-weight: 500;">Layout presentacion 100% ancho</div>
+    </div>
+  </div>
+
+  <div class="screens-grid">
+
+    <!-- ========== SCREEN 1: LOGIN ========== -->
+    <div class="screen-label screen-full"><span></span>01 - Login / Acceso</div>
+    <div class="screen-wrap screen-full">
+      <div class="login-split">
+        <div class="login-brand">
+          <div class="login-brand-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <div class="login-brand-title">ERP Comercial</div>
+          <div class="login-brand-sub">Inicia sesion para continuar</div>
+        </div>
+        <div class="login-form-panel">
+          <div class="login-form-inner">
+            <div class="login-title">Bienvenido</div>
+            <div class="login-subtitle">Ingresa tus credenciales para acceder</div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="form-input" type="email" placeholder="admin@miempresa.com" value="admin@miempresa.com" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contrasena</label>
+              <div class="form-input-wrap">
+                <input class="form-input" type="password" value="********" readonly style="padding-right: 40px;">
+                <div class="form-input-icon" title="Mostrar contrasena">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="form-options">
+              <label class="checkbox-label">
+                <div class="checkbox">
+                  <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 6 5 10 11 2"/></svg>
+                </div>
+                Recordiarme
+              </label>
+              <span class="forgot-link">Olvidiaste tu contrasena?</span>
+            </div>
+            <button class="btn-primary" type="button">Iniciar sesion</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 2: DASHBOARD ========== -->
+    <div class="screen-label screen-full"><span></span>02 - Dashboard / Resumen general</div>
+    <div class="screen-wrap screen-full" style="min-height: 600px;">
+      <div class="app-shell">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-logo">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+            <div><div class="logo-text">ERP Comercial</div><div class="logo-sub">Sistema de gestion</div></div>
+          </div>
+          <div class="sidebar-nav">
+            <div class="nav-section-label">Principal</div>
+            <div class="nav-item active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Dashboard
+            </div>
+            <div class="nav-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+              Ventas
+            </div>
+            <div class="nav-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+              Compras
+            </div>
+            <div class="nav-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4 8 4 8-4z"/><path d="M4 7v10l8 4 8-4V7"/></svg>
+              Stock
+            </div>
+            <div class="nav-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              Mayoristas
+            </div>
+            <div class="nav-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+              Pagos
+            </div>
+          </div>
+          <div class="sidebar-footer">
+            <div class="avatar">AD</div>
+            <div class="avatar-info">
+              <div class="avatar-name">Admin</div>
+              <div class="avatar-role">Administrador</div>
+            </div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </div>
+        </div>
+        <!-- Main -->
+        <div class="main-area">
+          <div class="topbar">
+            <div class="topbar-menu" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </div>
+            <div class="topbar-title">Dashboard</div>
+            <div class="topbar-spacer"></div>
+            <div class="topbar-diate">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              14/05/2024 - 14/06/2024
+            </div>
+            <div class="topbar-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+            </div>
+            <div class="topbar-avatar">AD</div>
+          </div>
+          <div class="page-content" style="overflow: hidden;">
+            <!-- Stats -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-label">Total vendido</div>
+                <div class="stat-value">$ 12.540.000</div>
+                <div class="currency-stack">
+                  <span class="currency-chip">ARS $ 12.540.000</span>
+                  <span class="currency-chip">CHL $ 12.980.000</span>
+                  <span class="currency-chip">USD 9.030</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Total comprado</div>
+                <div class="stat-value">$ 7.840.000</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Total cobrado</div>
+                <div class="stat-value">$ 8.230.000</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Saldo pendiente</div>
+                <div class="stat-value" style="color: var(--amber);">$ 4.310.000</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Ganancia total</div>
+                <div class="stat-value" style="color: var(--green);">$ 4.700.000</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Cantidiad de ventas</div>
+                <div class="stat-value">124</div>
+              </div>
+            </div>
+            <div class="insight-strip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+              Tech Store registra 14 dias sin pagar - Maria Gomez registra 18 dias sin pagar - Local Central registra 12 dias sin pagar
+            </div>
+            <!-- Grafico "Ventas por dia" (SVG de diseno) -->
+            <div class="chart-section">
+              <div class="chart-card chart-card--embed">
+                <svg class="chart-ventas-svg" viewBox="0 0 1536 475" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="chartVentasTitle">
+                  <title id="chartVentasTitle">Ventas por dia</title>
+                  <defs>
+                    <linearGradient id="ventasGradientDash" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#7C5CFF"/>
+                      <stop offset="100%" stop-color="#7C5CFF" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <rect width="1536" height="475" rx="18" fill="#FCFCFE"/>
+                  <rect x="0.5" y="0.5" width="1535" height="474" rx="17.5" stroke="#ECECF2"/>
+                  <text x="55" y="70" fill="#111827" font-size="22" font-family="Inter, DM Sans, sans-serif" font-weight="700">Ventas por dia</text>
+                  <rect x="1255" y="40" width="180" height="48" rx="10" fill="white" stroke="#E5E7EB"/>
+                  <text x="1275" y="70" fill="#374151" font-size="18" font-family="Inter, DM Sans, sans-serif" font-weight="600">Ultimos 30 dias</text>
+                  <path d="M1405 60L1415 70L1425 60" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <line x1="120" y1="120" x2="1450" y2="120" stroke="#E5E7EB" stroke-diasharray="6 6"/>
+                  <line x1="120" y1="185" x2="1450" y2="185" stroke="#E5E7EB" stroke-diasharray="6 6"/>
+                  <line x1="120" y1="250" x2="1450" y2="250" stroke="#E5E7EB" stroke-diasharray="6 6"/>
+                  <line x1="120" y1="320" x2="1450" y2="320" stroke="#E5E7EB" stroke-diasharray="6 6"/>
+                  <line x1="120" y1="390" x2="1450" y2="390" stroke="#E5E7EB"/>
+                  <text x="85" y="128" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">1M</text>
+                  <text x="65" y="193" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">750K</text>
+                  <text x="65" y="258" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">500K</text>
+                  <text x="65" y="328" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">250K</text>
+                  <text x="95" y="398" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">0</text>
+                  <path fill="url(#ventasGradientDash)" opacity="0.35" d="M140 345 C170 310 200 280 230 275 S290 330 340 320 S410 220 460 245 S530 300 580 250 S650 210 730 220 S800 360 860 300 S970 200 1050 150 S1140 320 1200 260 S1290 190 1350 250 S1410 290 1450 285 L1450 390 L140 390 Z"/>
+                  <path stroke="#5B3DF5" stroke-width="4" fill="none" stroke-linecap="round" d="M140 345 C170 310 200 280 230 275 S290 330 340 320 S410 220 460 245 S530 300 580 250 S650 210 730 220 S800 360 860 300 S970 200 1050 150 S1140 320 1200 260 S1290 190 1350 250 S1410 290 1450 285"/>
+                  <circle cx="140" cy="345" r="5" fill="#5B3DF5"/>
+                  <circle cx="230" cy="275" r="5" fill="#5B3DF5"/>
+                  <circle cx="340" cy="320" r="5" fill="#5B3DF5"/>
+                  <circle cx="460" cy="245" r="5" fill="#5B3DF5"/>
+                  <circle cx="580" cy="250" r="5" fill="#5B3DF5"/>
+                  <circle cx="730" cy="220" r="5" fill="#5B3DF5"/>
+                  <circle cx="860" cy="300" r="5" fill="#5B3DF5"/>
+                  <circle cx="1050" cy="150" r="5" fill="#5B3DF5"/>
+                  <circle cx="1200" cy="260" r="5" fill="#5B3DF5"/>
+                  <circle cx="1350" cy="250" r="5" fill="#5B3DF5"/>
+                  <circle cx="1450" cy="285" r="5" fill="#5B3DF5"/>
+                  <text x="140" y="430" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">15 May</text>
+                  <text x="340" y="430" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">20 May</text>
+                  <text x="540" y="430" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">25 May</text>
+                  <text x="740" y="430" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">30 May</text>
+                  <text x="940" y="430" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">4 Jun</text>
+                  <text x="1140" y="430" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">9 Jun</text>
+                  <text x="1330" y="430" fill="#6B7280" font-size="16" font-family="Inter, DM Sans, sans-serif">14 Jun</text>
+                </svg>
+              </div>
+            </div>
+            <div class="table-section">
+              <div class="table-card table-diash-wrap">
+                <div class="table-head">
+                  <span class="table-title">Ultimas ventas</span>
+                  <span class="table-link">Ver todias -></span>
+                </div>
+                <table class="table-diash">
+                  <thead>
+                    <tr><th>#</th><th>Mayorista</th><th>Fecha</th><th>Total</th><th>Pagado</th><th>Moneda</th><th>Saldo</th><th>Estado</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td class="primary">Juan Perez</td><td>14/06/2024</td><td>$ 620.000</td><td>$ 620.000</td><td><span class="currency-badge">ARS</span></td><td>$ 0</td><td><span class="badge badge-green">Pagada</span></td></tr>
+                    <tr><td>2</td><td class="primary">Tech Store</td><td>14/06/2024</td><td>$ 1.250.000</td><td>$ 650.000</td><td><span class="currency-badge">USD</span></td><td>$ 600.000</td><td><span class="badge badge-amber">Parcial</span></td></tr>
+                    <tr><td>3</td><td class="primary">Maria Gomez</td><td>13/06/2024</td><td>$ 340.000</td><td>$ 0</td><td><span class="currency-badge">CHL</span></td><td>$ 340.000</td><td><span class="badge badge-red">Pendiente</span></td></tr>
+                    <tr><td>4</td><td class="primary">Distribuidora Norte</td><td>13/06/2024</td><td>$ 980.000</td><td>$ 980.000</td><td><span class="currency-badge">ARS</span></td><td>$ 0</td><td><span class="badge badge-green">Pagada</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 3: VENTAS LIST ========== -->
+    <div class="screen-label screen-full"><span></span>03 - Lista de ventas</div>
+
+    <div class="screen-wrap screen-full">
+      <div class="app-shell" style="height: 620px;">
+        <div class="sidebar" style="width: 170px;">
+          <div class="sidebar-logo">
+            <div class="logo-icon" style="width:26px;height:26px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+            <div class="logo-text" style="font-size:12px;">ERP Comercial</div>
+          </div>
+          <div class="sidebar-nav">
+            <div class="nav-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Dashboard
+            </div>
+            <div class="nav-item active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>
+              Ventas
+            </div>
+            <div class="nav-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              Mayoristas
+            </div>
+            <div class="nav-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+              Pagos
+            </div>
+          </div>
+        </div>
+        <div class="main-area">
+          <div class="modal-topbar">
+            <div class="modal-topbar-title">Lista de ventas</div>
+            <div class="modal-topbar-spacer"></div>
+            <button class="btn-accent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Nueva venta
+            </button>
+          </div>
+          <div style="margin: 0 16px 16px; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--card-bg); box-shadow: var(--shadow-card);">
+          <div class="toolbar">
+            <div class="search-bar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Buscar venta o mayorista..." readonly>
+            </div>
+            <div class="toolbar-spacer"></div>
+            <button class="btn-outline">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Filtros
+            </button>
+          </div>
+          <table style="background: var(--card-bg);">
+            <thead>
+              <tr><th>#</th><th>Mayorista</th><th>Fecha</th><th>Total</th><th>Pagado</th><th>Moneda</th><th>Saldo</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="mono">124</td><td class="primary">Juan Perez</td><td>14/06</td><td class="mono">$620.000</td><td class="mono">$620.000</td><td><span class="currency-badge">ARS</span></td><td class="mono">$0</td><td><span class="badge badge-green">Pagada</span></td></tr>
+              <tr><td class="mono">123</td><td class="primary">Tech Store</td><td>14/06</td><td class="mono">$1.250.000</td><td class="mono">$650.000</td><td><span class="currency-badge">USD</span></td><td class="mono">$600.000</td><td><span class="badge badge-amber">Parcial</span></td></tr>
+              <tr><td class="mono">122</td><td class="primary">Maria Gomez</td><td>13/06</td><td class="mono">$340.000</td><td class="mono">$0</td><td><span class="currency-badge">CHL</span></td><td class="mono">$340.000</td><td><span class="badge badge-red">Pendiente</span></td></tr>
+              <tr><td class="mono">121</td><td class="primary">Distribuidora Norte</td><td>13/06</td><td class="mono">$980.000</td><td class="mono">$980.000</td><td><span class="currency-badge">ARS</span></td><td class="mono">$0</td><td><span class="badge badge-green">Pagada</span></td></tr>
+              <tr><td class="mono">120</td><td class="primary">Carlos Ramirez</td><td>12/06</td><td class="mono">$450.000</td><td class="mono">$200.000</td><td><span class="currency-badge">ARS</span></td><td class="mono">$250.000</td><td><span class="badge badge-amber">Parcial</span></td></tr>
+              <tr><td class="mono">119</td><td class="primary">Local Central</td><td>12/06</td><td class="mono">$2.100.000</td><td class="mono">$1.500.000</td><td><span class="currency-badge">USD</span></td><td class="mono">$600.000</td><td><span class="badge badge-amber">Parcial</span></td></tr>
+              <tr><td class="mono">118</td><td class="primary">Lucas Martinez</td><td>12/06</td><td class="mono">$110.000</td><td class="mono">$110.000</td><td><span class="currency-badge">CHL</span></td><td class="mono">$0</td><td><span class="badge badge-red">Pendiente</span></td></tr>
+            </tbody>
+          </table>
+          <div class="pagination">
+            <div class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div>
+            <div class="page-btn active">1</div>
+            <div class="page-btn">2</div>
+            <div class="page-btn">3</div>
+            <div class="page-btn" style="font-size:10px;">...</div>
+            <div class="page-btn">16</div>
+            <div class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 4: NUEVA VENTA ========== -->
+    <div class="screen-label screen-full"><span></span>04 - Nueva venta</div>
+
+    <!-- Nueva Venta -->
+    <div class="screen-wrap screen-full">
+      <div class="app-shell" style="height: 620px;">
+        <div class="sidebar" style="width: 170px;">
+          <div class="sidebar-logo">
+            <div class="logo-icon" style="width:26px;height:26px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+            <div class="logo-text" style="font-size:12px;">ERP Comercial</div>
+          </div>
+          <div class="sidebar-nav">
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</div>
+            <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>Ventas</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Mayoristas</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pagos</div>
+          </div>
+        </div>
+        <div class="main-area">
+          <div class="modal-topbar">
+            <div class="modal-topbar-title">Nueva venta</div>
+            <div class="modal-topbar-spacer"></div>
+            <button class="btn-accent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+              Guardiar venta
+            </button>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 200px; height: calc(100% - 46px); overflow: hidden; background: var(--page-bg);">
+            <!-- Form left -->
+            <div style="padding: 16px; overflow: auto; border-right: 1px solid var(--border);">
+              <div class="form-two-col" style="margin-bottom: 12px;">
+                <div>
+                  <div class="form-label" style="font-size:10px; margin-bottom:5px;">Mayorista</div>
+                  <select class="select-field"><option>Tech Store</option></select>
+                </div>
+                <div>
+                  <div class="form-label" style="font-size:10px; margin-bottom:5px;">Fecha de venta</div>
+                  <input class="select-field" type="text" value="14/09/2024" readonly>
+                </div>
+              </div>
+              <!-- Products -->
+              <div class="form-label" style="font-size:10px; margin-bottom:8px;">Productos</div>
+              <div class="product-table-wrap">
+                <div class="product-table-header">
+                  <div class="col-label">Producto/modelo</div>
+                  <div class="col-label">Cant.</div>
+                  <div class="col-label">Precio unit.</div>
+                  <div class="col-label">Subtotal</div>
+                  <div></div>
+                </div>
+                <div class="product-row-form">
+                  <div class="product-cell">Samsung A15</div>
+                  <div><input class="qty-input" value="2" readonly style="width:40px;"></div>
+                  <div class="product-cell mono">$250.000</div>
+                  <div class="product-cell mono" style="color: var(--text-primary); font-weight:600;">$500.000</div>
+                  <button class="remove-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                </div>
+                <div class="product-row-form">
+                  <div class="product-cell">Redmi Note 12</div>
+                  <div><input class="qty-input" value="1" readonly style="width:40px;"></div>
+                  <div class="product-cell mono">$300.000</div>
+                  <div class="product-cell mono" style="color: var(--text-primary); font-weight:600;">$300.000</div>
+                  <button class="remove-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                </div>
+                <div class="product-row-form">
+                  <div class="product-cell">Vidrio templado</div>
+                  <div><input class="qty-input" value="3" readonly style="width:40px;"></div>
+                  <div class="product-cell mono">$10.000</div>
+                  <div class="product-cell mono" style="color: var(--text-primary); font-weight:600;">$30.000</div>
+                  <button class="remove-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                </div>
+                <div class="add-product-row">
+                  <select class="select-field">
+                    <option>Samsung A15 - IMEI 356812345678901 - Stock</option>
+                    <option>Redmi Note 12 - IMEI 867512340987654 - Stock</option>
+                    <option>Nuevo producto</option>
+                  </select>
+                  <button class="add-product-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Agregar producto
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Summary right -->
+            <div style="padding: 16px; display: flex; flex-direction: column; gap: 10px; overflow: auto;">
+              <div class="summary-box">
+                <div class="summary-row"><span class="label">Subtotal</span><span class="mono" style="font-size:12px;">$830.000</span></div>
+                <div class="summary-row"><span class="label">Descuento</span><span class="mono" style="font-size:12px;">$0</span></div>
+                <div class="summary-row total"><span class="label">Total</span><span class="value">$830.000</span></div>
+              </div>
+              <div>
+                <div class="form-label" style="font-size:10px; margin-bottom:6px;">Pago</div>
+                <div class="pay-section">
+                  <div class="pay-row">
+                    <span style="font-size:11px; color: var(--text-secondary);">Monto pagado</span>
+                    <span class="mono" style="font-size:12px; font-weight:600;">$300.000</span>
+                  </div>
+                  <div class="pay-row">
+                    <span style="font-size:11px; color: var(--text-secondary);">Saldo pendiente</span>
+                    <span class="mono" style="font-size:13px; font-weight:700; color: var(--amber);">$530.000</span>
+                  </div>
+                  <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border);">
+                    <div class="pay-row">
+                      <span style="font-size:11px; color: var(--text-secondary);">Estado</span>
+                      <span class="badge badge-amber">Parcial</span>
+                    </div>
+                    <div class="pay-row">
+                      <span style="font-size:11px; color: var(--text-secondary);">Limite de pago</span>
+                      <span style="font-size:11px; font-family: var(--mono);">21/06/2024</span>
+                    </div>
+                    <div class="pay-row">
+                      <span style="font-size:11px; color: var(--text-secondary);">Dias de atraso</span>
+                      <span style="font-size:11px; font-family: var(--mono); color: var(--green);">0</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 5: MAYORISTA DETAIL ========== -->
+    <div class="screen-label screen-full"><span></span>05 - Detalle de mayorista</div>
+
+    <!-- Mayorista Detail -->
+    <div class="screen-wrap screen-full">
+      <div class="app-shell" style="height: 640px;">
+        <div class="sidebar" style="width: 170px;">
+          <div class="sidebar-logo">
+            <div class="logo-icon" style="width:26px;height:26px;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+            <div class="logo-text" style="font-size:12px;">ERP Comercial</div>
+          </div>
+          <div class="sidebar-nav">
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>Ventas</div>
+            <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Mayoristas</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pagos</div>
+          </div>
+        </div>
+        <div class="main-area">
+          <div class="modal-topbar">
+            <div class="modal-topbar-title">Mayorista - Juan Perez - Junio 2024</div>
+            <div class="modal-topbar-spacer"></div>
+            <button class="btn-outline" style="font-size:11px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Historial mensual
+            </button>
+            <button class="btn-outline" style="font-size:11px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Editar mayorista
+            </button>
+          </div>
+          <div style="overflow: auto; height: calc(100% - 46px); background: var(--page-bg);">
+            <!-- Header -->
+            <div class="client-header">
+              <div class="client-avatar">JP</div>
+              <div style="flex: 1;">
+                <div class="client-name">Juan Perez</div>
+                <div class="client-contact">
+                  <div class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.01 1.18A2 2 0 012 .01h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14v2.92z"/></svg>
+                    +54 11 1234-5678
+                  </div>
+                  <div class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    juanperez@gmail.com
+                  </div>
+                </div>
+              </div>
+              <!-- Summary right -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; min-width: 220px;">
+                <div>
+                  <div style="font-size:10px; color: var(--text-muted); text-transform: uppercase; letter-spacing:.08em; margin-bottom:3px;">Total comprado mes</div>
+                  <div style="font-size:14px; font-weight:700; font-family: var(--mono);">$2.250.000</div>
+                </div>
+                <div>
+                  <div style="font-size:10px; color: var(--text-muted); text-transform: uppercase; letter-spacing:.08em; margin-bottom:3px;">Cant. compras mes</div>
+                  <div style="font-size:14px; font-weight:700; font-family: var(--mono);">8</div>
+                </div>
+                <div>
+                  <div style="font-size:10px; color: var(--text-muted); text-transform: uppercase; letter-spacing:.08em; margin-bottom:3px;">Total pagado mes</div>
+                  <div style="font-size:14px; font-weight:700; font-family: var(--mono);">$1.800.000</div>
+                </div>
+                <div>
+                  <div style="font-size:10px; color: var(--text-muted); text-transform: uppercase; letter-spacing:.08em; margin-bottom:3px;">Ultima compra</div>
+                  <div style="font-size:14px; font-weight:700; font-family: var(--mono);">14/06/24</div>
+                </div>
+                <div>
+                  <div style="font-size:10px; color: var(--text-muted); text-transform: uppercase; letter-spacing:.08em; margin-bottom:3px;">Saldo pendiente mes</div>
+                  <div style="font-size:14px; font-weight:700; font-family: var(--mono); color: var(--amber);">$550.000</div>
+                </div>
+                <div>
+                  <div style="font-size:10px; color: var(--text-muted); text-transform: uppercase; letter-spacing:.08em; margin-bottom:3px;">Estado</div>
+                  <span class="badge badge-amber">Parcial</span>
+                </div>
+              </div>
+            </div>
+            <!-- Tabs -->
+            <div class="tabs">
+              <div class="tab active">Historial de ventas</div>
+              <div class="tab">Historial de pagos</div>
+              <div class="tab">Historial mensual</div>
+            </div>
+            <div style="margin: 0 16px 16px; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--card-bg); box-shadow: var(--shadow-card);">
+            <table>
+              <thead>
+                <tr><th>Fecha</th><th>Producto</th><th>Cant.</th><th>Total</th><th>Pagado</th><th>Moneda</th><th>Saldo</th><th>Estado</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>14/06/2024</td><td class="primary">Samsung A15</td><td class="mono">2</td><td class="mono">$125.000</td><td class="mono">$620.000</td><td><span class="currency-badge">ARS</span></td><td class="mono">$0</td><td><span class="badge badge-green">Pagada</span></td></tr>
+                <tr><td>01/06/2024</td><td class="primary">iPhone 13</td><td class="mono">1</td><td class="mono">$950.000</td><td class="mono">$500.000</td><td><span class="currency-badge">USD</span></td><td class="mono">$450.000</td><td><span class="badge badge-amber">Parcial</span></td></tr>
+                <tr><td>15/05/2024</td><td class="primary">Redmi Note 13</td><td class="mono">2</td><td class="mono">$600.000</td><td class="mono">$400.000</td><td><span class="currency-badge">CHL</span></td><td class="mono">$200.000</td><td><span class="badge badge-amber">Parcial</span></td></tr>
+                <tr><td>10/05/2024</td><td class="primary">Vidrio templado</td><td class="mono">5</td><td class="mono">$25.000</td><td class="mono">$25.000</td><td><span class="currency-badge">ARS</span></td><td class="mono">$0</td><td><span class="badge badge-green">Pagada</span></td></tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 6: PAGOS ========== -->
+    <div class="screen-label screen-full"><span></span>06 - Pagos y cobranzas</div>
+
+    <!-- Pagos / Cobranzas -->
+    <div class="screen-wrap screen-full">
+      <div class="app-shell" style="height: 640px;">
+        <div class="sidebar" style="width: 170px;">
+          <div class="sidebar-logo">
+            <div class="logo-icon" style="width:26px;height:26px;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+            <div class="logo-text" style="font-size:12px;">ERP Comercial</div>
+          </div>
+          <div class="sidebar-nav">
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>Ventas</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Mayoristas</div>
+            <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pagos</div>
+          </div>
+        </div>
+        <div class="main-area">
+          <div class="modal-topbar">
+            <div class="modal-topbar-title">Pagos / Cobranzas</div>
+            <div class="modal-topbar-spacer"></div>
+            <button class="btn-accent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Registrar pago
+            </button>
+          </div>
+          <div style="margin: 0 16px 16px; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--card-bg); box-shadow: var(--shadow-card);">
+          <div class="toolbar">
+            <div class="search-bar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Buscar pago..." readonly>
+            </div>
+            <div class="toolbar-spacer"></div>
+            <button class="btn-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg> Filtros</button>
+          </div>
+          <table>
+            <thead>
+              <tr><th>#</th><th>Mayorista</th><th>Venta</th><th>Fecha</th><th>Monto</th><th>Metodo</th><th>Observaciones</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="mono">58</td><td class="primary">Juan Perez</td><td class="mono">#123</td><td>14/06/2024</td><td class="mono" style="color:var(--green);font-weight:600;">$300.000</td><td>
+                <div class="method-badge"><div class="method-dot" style="background:#2563EB"></div> Transferencia</div>
+              </td><td style="font-size:11px;color:var(--text-muted);">Pago parcial acordiado</td></tr>
+              <tr><td class="mono">57</td><td class="primary">Tech Store</td><td class="mono">#122</td><td>14/06/2024</td><td class="mono" style="color:var(--green);font-weight:600;">$650.000</td><td>
+                <div class="method-badge"><div class="method-dot" style="background:#16A34A"></div> Efectivo</div>
+              </td><td style="font-size:11px;color:var(--text-muted);">Pago en efectivo</td></tr>
+              <tr><td class="mono">56</td><td class="primary">Distribuidora Norte</td><td class="mono">#121</td><td>13/06/2024</td><td class="mono" style="color:var(--green);font-weight:600;">$980.000</td><td>
+                <div class="method-badge"><div class="method-dot" style="background:#2563EB"></div> Transferencia</div>
+              </td><td style="font-size:11px;color:var(--text-muted);">Segun conversacion</td></tr>
+              <tr><td class="mono">55</td><td class="primary">Local Central</td><td class="mono">#120</td><td>12/06/2024</td><td class="mono" style="color:var(--green);font-weight:600;">$1.000.000</td><td>
+                <div class="method-badge"><div class="method-dot" style="background:#2563EB"></div> Transferencia</div>
+              </td><td style="font-size:11px;color:var(--text-muted);">Pago parcial</td></tr>
+              <tr><td class="mono">54</td><td class="primary">Juan Perez</td><td class="mono">#119</td><td>11/06/2024</td><td class="mono" style="color:var(--green);font-weight:600;">$500.000</td><td>
+                <div class="method-badge"><div class="method-dot" style="background:#2563EB"></div> Transferencia</div>
+              </td><td style="font-size:11px;color:var(--text-muted);">Pago parcial</td></tr>
+            </tbody>
+          </table>
+          <div class="pagination">
+            <div class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div>
+            <div class="page-btn active">1</div>
+            <div class="page-btn">2</div>
+            <div class="page-btn">3</div>
+            <div class="page-btn" style="font-size:10px;">...</div>
+            <div class="page-btn">12</div>
+            <div class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 7: REGISTRAR PAGO ========== -->
+    <div class="screen-label screen-full"><span></span>07 - Registrar pago</div>
+    <div class="screen-wrap screen-full" style="padding: 0 0 32px;">
+      <div class="register-page-wrap">
+        <div class="register-page-card">
+          <div style="padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);">Registrar pago</div>
+              <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Completa los diatos para registrar el cobro</div>
+            </div>
+            <button class="save-btn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px;"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+              Guardiar pago
+            </button>
+          </div>
+          <div style="padding: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+              <div>
+                <label class="form-label">Mayorista</label>
+                <select class="select-field" style="width:100%; padding:8px 10px; font-size:12px;"><option>Seleccionar mayorista</option></select>
+              </div>
+              <div>
+                <label class="form-label">Venta asociadia (opcional)</label>
+                <select class="select-field" style="width:100%; padding:8px 10px; font-size:12px;"><option>Seleccionar venta</option></select>
+              </div>
+              <div>
+                <label class="form-label">Fecha</label>
+                <input class="select-field" type="text" value="14/06/2024" style="width:100%; padding:8px 10px; font-size:12px;" readonly>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px;">
+              <div>
+                <label class="form-label">Monto</label>
+                <div class="amount-input-wrap">
+                  <span class="amount-prefix">$</span>
+                  <input class="amount-input" value="200.000" readonly>
+                </div>
+              </div>
+              <div>
+                <label class="form-label">Cotizacion USD</label>
+                <div class="amount-input-wrap">
+                  <span class="amount-prefix">$</span>
+                  <input class="amount-input" value="1.435" readonly>
+                </div>
+              </div>
+              <div>
+                <label class="form-label">Total USD</label>
+                <div class="amount-input-wrap">
+                  <span class="amount-prefix">U$D</span>
+                  <input class="amount-input" value="160,00" readonly style="padding-left: 42px;">
+                </div>
+              </div>
+              <div>
+                <label class="form-label">Metodo de pago</label>
+                <select class="select-field" style="width:100%; padding:8px 10px; font-size:12px;"><option>Seleccionar metodo</option></select>
+              </div>
+              <div style="grid-column: 1 / -1;">
+                <label class="form-label">Observaciones</label>
+                <input class="select-field" type="text" placeholder="Pago parcial acordiado, etc." style="width:100%; padding:8px 10px; font-size:12px;" readonly>
+              </div>
+            </div>
+          </div>
+          <div style="padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end;">
+            <button class="btn-outline" type="button" style="font-size:12px; padding: 7px 14px;">Cancelar</button>
+            <button class="save-btn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px;"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+              Guardiar pago
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 8: COMPRAS -->
+    <div class="screen-label screen-full"><span></span>08 - Compras</div>
+    <div class="screen-wrap screen-full">
+      <div class="app-shell" style="height: 620px;">
+        <div class="sidebar" style="width: 170px;">
+          <div class="sidebar-logo">
+            <div class="logo-icon" style="width:26px;height:26px;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" style="width:13px;height:13px;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+            <div class="logo-text" style="font-size:12px;">ERP Comercial</div>
+          </div>
+          <div class="sidebar-nav">
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>Ventas</div>
+            <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>Compras</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4 8 4 8-4z"/><path d="M4 7v10l8 4 8-4V7"/></svg>Stock</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Mayoristas</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pagos</div>
+          </div>
+        </div>
+        <div class="main-area">
+          <div class="modal-topbar">
+            <div class="modal-topbar-title">Compras</div>
+            <div class="modal-topbar-spacer"></div>
+            <button class="btn-accent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nueva compra</button>
+          </div>
+          <div class="mini-summary">
+            <div class="mini-summary-card"><div class="mini-summary-label">Total comprado</div><div class="mini-summary-value">$ 7.840.000</div></div>
+            <div class="mini-summary-card"><div class="mini-summary-label">Total pagado</div><div class="mini-summary-value" style="color:var(--green);">$ 6.100.000</div></div>
+            <div class="mini-summary-card"><div class="mini-summary-label">Saldo a proveedores</div><div class="mini-summary-value" style="color:var(--amber);">$ 1.740.000</div></div>
+          </div>
+          <div style="margin: 0 16px 16px; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--card-bg); box-shadow: var(--shadow-card);">
+            <div class="toolbar">
+              <div class="search-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input placeholder="Buscar compra o proveedor..." readonly></div>
+              <div class="toolbar-spacer"></div>
+              <button class="btn-outline">Filtros</button>
+            </div>
+            <table>
+              <thead>
+                <tr><th>#</th><th>Proveedor</th><th>Fecha</th><th>Total</th><th>Pagado</th><th>Moneda</th><th>Saldo</th><th>Estado</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="mono">42</td><td class="primary">Importadora Celular</td><td>14/06</td><td class="mono">$3.250.000</td><td class="mono">$2.000.000</td><td><span class="currency-badge">USD</span></td><td class="mono">$1.250.000</td><td><span class="badge badge-amber">Parcial</span></td></tr>
+                <tr><td class="mono">41</td><td class="primary">Mayorista Norte</td><td>12/06</td><td class="mono">$1.180.000</td><td class="mono">$1.180.000</td><td><span class="currency-badge">ARS</span></td><td class="mono">$0</td><td><span class="badge badge-green">Pagada</span></td></tr>
+                <tr><td class="mono">40</td><td class="primary">Accesorios Chile</td><td>10/06</td><td class="mono">$780.000</td><td class="mono">$290.000</td><td><span class="currency-badge">CHL</span></td><td class="mono">$490.000</td><td><span class="badge badge-amber">Parcial</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 9: STOCK -->
+    <div class="screen-label screen-full"><span></span>09 - Stock / QR e IMEI</div>
+    <div class="screen-wrap screen-full">
+      <div class="app-shell" style="height: 620px;">
+        <div class="sidebar" style="width: 170px;">
+          <div class="sidebar-logo">
+            <div class="logo-icon" style="width:26px;height:26px;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" style="width:13px;height:13px;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+            <div class="logo-text" style="font-size:12px;">ERP Comercial</div>
+          </div>
+          <div class="sidebar-nav">
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>Ventas</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>Compras</div>
+            <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4 8 4 8-4z"/><path d="M4 7v10l8 4 8-4V7"/></svg>Stock</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Mayoristas</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pagos</div>
+          </div>
+        </div>
+        <div class="main-area">
+          <div class="modal-topbar">
+            <div class="modal-topbar-title">Stock</div>
+            <div class="modal-topbar-spacer"></div>
+            <button class="btn-accent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Agregar producto</button>
+          </div>
+          <div class="qr-panel">
+            <div class="scanner-card">
+              <div>
+                <div class="mini-summary-label">Ingreso por scanner</div>
+                <div style="font-size:13px; font-weight:700;">Leer IMEI o codigo de barras</div>
+              </div>
+              <div class="scanner-actions">
+                <button class="scanner-btn" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 7V5a2 2 0 012-2h2"/><path d="M17 3h2a2 2 0 012 2v2"/><path d="M21 17v2a2 2 0 01-2 2h-2"/><path d="M7 21H5a2 2 0 01-2-2v-2"/><path d="M4 12h16"/></svg>
+                  Capturar scan
+                </button>
+                <input class="scan-input" value="" placeholder="Click aqui y escanea con la pistola o escribe manualmente">
+              </div>
+              <div class="scanner-status">
+                <span>Ultimo codigo leido</span>
+                <strong>356812345678901</strong>
+              </div>
+            </div>
+            <div class="mini-summary" style="margin:0; grid-template-columns: repeat(3, 1fr);">
+              <div class="mini-summary-card"><div class="mini-summary-label">En stock</div><div class="mini-summary-value">38</div></div>
+              <div class="mini-summary-card"><div class="mini-summary-label">Reservados</div><div class="mini-summary-value" style="color:var(--amber);">5</div></div>
+              <div class="mini-summary-card"><div class="mini-summary-label">Vendidos mes</div><div class="mini-summary-value" style="color:var(--green);">21</div></div>
+            </div>
+          </div>
+          <div class="stock-form-card">
+            <div class="stock-form-head">
+              <div>
+                <div class="stock-form-title">Nuevo producto</div>
+                <div style="font-size:11px; color: var(--text-secondary);">El IMEI se completa con la pistola scanner o manualmente.</div>
+              </div>
+              <button class="save-btn" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                Guardiar producto
+              </button>
+            </div>
+            <div class="stock-form-grid">
+              <div>
+                <label class="form-label">IMEI</label>
+                <input class="select-field" type="text" value="356812345678901">
+              </div>
+              <div>
+                <label class="form-label">Producto</label>
+                <input class="select-field" type="text" value="Samsung A15 128GB">
+              </div>
+              <div>
+                <label class="form-label">Proveedor</label>
+                <select class="select-field"><option>Importadora Celular</option><option>Mayorista Norte</option></select>
+              </div>
+              <div>
+                <label class="form-label">Ingreso</label>
+                <input class="select-field" type="text" value="14/06/2024">
+              </div>
+              <div>
+                <label class="form-label">Costo</label>
+                <input class="select-field" type="text" value="$250.000">
+              </div>
+              <div>
+                <label class="form-label">Moneda</label>
+                <select class="select-field"><option>USD</option><option>ARS</option><option>CHL</option></select>
+              </div>
+              <div>
+                <label class="form-label">Estado</label>
+                <select class="select-field"><option>Disponible</option><option>Reservado</option><option>Vendido</option></select>
+              </div>
+            </div>
+          </div>
+          <div style="margin: 0 16px 16px; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--card-bg); box-shadow: var(--shadow-card);">
+            <table>
+              <thead>
+                <tr><th>Producto</th><th>IMEI / Codigo</th><th>Proveedor</th><th>Ingreso</th><th>Costo</th><th>Moneda</th><th>Estado</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="primary">Samsung A15 128GB</td><td class="mono">356812345678901</td><td>Importadora Celular</td><td>14/06</td><td class="mono">$250.000</td><td><span class="currency-badge">USD</span></td><td><span class="badge badge-green">Disponible</span></td></tr>
+                <tr><td class="primary">Redmi Note 12</td><td class="mono">867512340987654</td><td>Mayorista Norte</td><td>12/06</td><td class="mono">$210.000</td><td><span class="currency-badge">ARS</span></td><td><span class="badge badge-green">Disponible</span></td></tr>
+                <tr><td class="primary">iPhone 13 128GB</td><td class="mono">353409876543210</td><td>Importadora Celular</td><td>10/06</td><td class="mono">$720.000</td><td><span class="currency-badge">USD</span></td><td><span class="badge badge-amber">Reservado</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end screens-grid -->
+
+  <!-- FOOTER -->
+  <div style="padding: 28px 40px; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 28px; height: 28px; background: #7C3AED; border-radius: 7px; display: flex; align-items: center; justify-content: center;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <div>
+        <div style="font-size: 13px; font-weight: 600; color: #111827;">ERP Comercial</div>
+        <div style="font-size: 11px; color: #6B7280;">UI Design v2.1 - 9 pantallas</div>
+      </div>
+    </div>
+    <div style="display: flex; gap: 24px;">
+      <div style="text-align: center;">
+        <div style="font-size: 18px; font-weight: 700; color: #7C3AED;">9</div>
+        <div style="font-size: 10px; color: #9CA3AF; text-transform: uppercase; letter-spacing:.1em;">Pantallas</div>
+      </div>
+      <div style="text-align: center;">
+        <div style="font-size: 18px; font-weight: 700; color: #16A34A;">Claro</div>
+        <div style="font-size: 10px; color: #9CA3AF; text-transform: uppercase; letter-spacing:.1em;">Tema</div>
+      </div>
+      <div style="text-align: center;">
+        <div style="font-size: 18px; font-weight: 700; color: #111827;">DM Sans</div>
+        <div style="font-size: 10px; color: #9CA3AF; text-transform: uppercase; letter-spacing:.1em;">Tipografia</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main wrapper -->
+</body>
+</html>
+
+

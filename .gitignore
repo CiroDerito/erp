@@ -1,0 +1,78 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+coverage/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# TypeScript
+*.tsbuildinfo
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+.cache/
+
+# Vercel
+.vercel/
+
+# TurboRepo
+.turbo/
+
+# Docker
+docker-compose.override.yml
+
+# NestJS uploads (si aplica)
+uploads/
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# Generated files
+*.tgz
+
+# ESLint cache
+.eslintcache
+
+# Parcel
+.parcel-cache/
+
+# Storybook
+storybook-static/
+
+# Local configs
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
