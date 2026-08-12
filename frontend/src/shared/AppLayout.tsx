@@ -35,10 +35,21 @@ const titles: Record<string, string> = {
   '/caja': 'Control de caja',
 };
 
+function getInitials(name?: string) {
+  if (!name) return 'AD';
+
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'AD';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+
+  return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+}
+
 export function AppLayout() {
   const { user, logout } = useAuth();
   const location = useLocation();
   const title = titles[location.pathname] ?? 'Sistema de control';
+  const initials = getInitials(user?.name);
 
   return (
     <div className="app-shell">
@@ -67,7 +78,7 @@ export function AppLayout() {
         </nav>
 
         <button className="sidebar-footer" onClick={logout} type="button">
-          <div className="avatar">AD</div>
+          <div className="avatar">{initials}</div>
           <div className="avatar-info">
             <div className="avatar-name">{user?.name ?? 'Admin'}</div>
             <div className="avatar-role">Administrador</div>
@@ -81,7 +92,7 @@ export function AppLayout() {
           <div className="topbar-title">{title}</div>
           <div className="topbar-spacer" />
           <div className="topbar-date">Junio 2026</div>
-          <div className="topbar-avatar">AD</div>
+          <div className="topbar-avatar">{initials}</div>
         </header>
         <section className="page-content">
           <Outlet />
