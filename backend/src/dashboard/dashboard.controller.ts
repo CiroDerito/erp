@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DashboardService } from './dashboard.service';
 
@@ -9,7 +9,7 @@ export class DashboardController {
 
   @ApiOperation({ summary: 'Obtener resumen general del dashboard' })
   @Get()
-  getSummary() {
-    return this.dashboardService.getSummary();
+  getSummary(@Query('month') month?: string) {
+    return this.dashboardService.getSummary(month);
   }
 }

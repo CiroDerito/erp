@@ -2,27 +2,27 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateSupplierDto {
-  @ApiProperty({ example: 'Importadora Celular' })
+  @ApiProperty()
   @IsString()
   @MinLength(2)
   name: string;
 
-  @ApiPropertyOptional({ example: '+54 11 4000-1000' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   phone?: string;
 
-  @ApiPropertyOptional({ example: 'ventas@importadoracelular.demo' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsEmail()
   email?: string;
 
-  @ApiPropertyOptional({ example: 'Proveedor de equipos importados' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   notes?: string;
 
-  @ApiPropertyOptional({ example: true, default: true })
+  @ApiPropertyOptional({ default: true })
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;

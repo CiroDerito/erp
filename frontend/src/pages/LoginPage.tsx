@@ -5,7 +5,7 @@ import { useAuth } from '../modules/auth/AuthProvider';
 
 export function LoginPage() {
   const { login, isAuthenticated } = useAuth();
-  const [email, setEmail] = useState('admin@erp.local');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ export function LoginPage() {
         <div className="login-brand-icon">
           <Monitor size={24} />
         </div>
-        <div className="login-brand-title">ERP Comercial</div>
+        <div className="login-brand-title">Sistema de control</div>
         <div className="login-brand-sub">Inicia sesion para continuar</div>
       </div>
       <div className="login-form-panel">

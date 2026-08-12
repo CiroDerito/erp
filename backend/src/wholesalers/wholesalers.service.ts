@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
-import { Wholesaler } from '../entities';
+import { Payment, Sale, Wholesaler } from '../entities';
 import { CreateWholesalerDto } from './dto/create-wholesaler.dto';
 import { UpdateWholesalerDto } from './dto/update-wholesaler.dto';
 
@@ -11,6 +11,10 @@ export class WholesalersService {
   constructor(
     @InjectRepository(Wholesaler)
     private readonly wholesalersRepository: Repository<Wholesaler>,
+    @InjectRepository(Sale)
+    private readonly salesRepository: Repository<Sale>,
+    @InjectRepository(Payment)
+    private readonly paymentsRepository: Repository<Payment>,
   ) {}
 
   async findAll(query: PaginationQueryDto) {
@@ -32,6 +36,42 @@ export class WholesalersService {
     }
 
     return wholesaler;
+  }
+
+  async findDetail(id: string) {
+    const wholesaler = await this.findOne(id);
+    const [sales, payments] = await Promise.all([
+      this.salesRepository.find({
+        where: { wholesaler: { id } },
+        relations: { items: { product: true, stockItem: true }, payments: true },
+        order: { saleDate: 'DESC', createdAt: 'DESC' },
+      }),
+      this.paymentsRepository.find({
+        where: { wholesaler: { id } },
+        relations: { sale: true },
+        order: { paymentDate: 'DESC', createdAt: 'DESC' },
+      }),
+    ]);
+
+    const totals = sales.reduce<Record<string, { sold: number; paid: number; balance: number }>>((result, sale) => {
+      const currency = sale.currency;
+      result[currency] ??= { sold: 0, paid: 0, balance: 0 };
+      result[currency].sold += Number(sale.totalAmount);
+      result[currency].paid += Number(sale.paidAmount);
+      result[currency].balance += Number(sale.balanceAmount);
+      return result;
+    }, {});
+
+    return {
+      wholesaler,
+      totals: Object.fromEntries(Object.entries(totals).map(([currency, values]) => [currency, {
+        sold: values.sold.toFixed(2),
+        paid: values.paid.toFixed(2),
+        balance: values.balance.toFixed(2),
+      }])),
+      sales,
+      payments,
+    };
   }
 
   async create(dto: CreateWholesalerDto) {

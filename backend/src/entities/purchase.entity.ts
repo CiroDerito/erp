@@ -3,6 +3,7 @@ import { Currency } from '../common/enums/currency.enum';
 import { PaymentStatus } from '../common/enums/payment-status.enum';
 import { BaseEntity } from './base.entity';
 import { PurchaseItem } from './purchase-item.entity';
+import { Payment } from './payment.entity';
 import { Supplier } from './supplier.entity';
 import { User } from './user.entity';
 
@@ -39,4 +40,7 @@ export class Purchase extends BaseEntity {
 
   @OneToMany(() => PurchaseItem, (purchaseItem) => purchaseItem.purchase, { cascade: true })
   items: PurchaseItem[];
+
+  @OneToMany(() => Payment, (payment) => payment.purchase)
+  payments: Payment[];
 }

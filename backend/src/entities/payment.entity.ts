@@ -42,7 +42,7 @@ export class Payment extends BaseEntity {
   @JoinColumn({ name: 'supplier_id' })
   supplier?: Supplier | null;
 
-  @ManyToOne(() => Purchase, { nullable: true })
+  @ManyToOne(() => Purchase, (purchase) => purchase.payments, { nullable: true })
   @JoinColumn({ name: 'purchase_id' })
   purchase?: Purchase | null;
 }

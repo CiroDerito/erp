@@ -1,11 +1,13 @@
-import { Pencil, Plus } from 'lucide-react';
-import { FormEvent, useMemo, useState } from 'react';
-import { Currency, Sale, StockItem, Wholesaler, createResource, updateResource } from '../api/resources';
+import { Eye, Pencil, Plus } from 'lucide-react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Currency, MonthlySalesTotal, Sale, StockItem, Wholesaler, createResource, getMonthlySalesTotal, updateResource } from '../api/resources';
 import { useApiResource } from '../api/useApiResource';
 import { money, paymentStatusLabel, paymentStatusTone, shortDate } from '../shared/format';
 import { Badge, Button, CurrencyBadge, EmptyRow, Modal, PageHeader, TableState } from '../shared/ui';
 
 export function VentasPage() {
+  const navigate = useNavigate();
   const { data, loading, error, reload } = useApiResource<Sale>('/sales');
   const { data: wholesalers } = useApiResource<Wholesaler>('/wholesalers');
   const { data: stock } = useApiResource<StockItem>('/stock');
@@ -17,7 +19,19 @@ export function VentasPage() {
   const [selectedProductIds, setSelectedProductIds] = useState<string[]>(['']);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
+  const [summaryMonth, setSummaryMonth] = useState(new Date().toISOString().slice(0, 7));
+  const [monthlyTotal, setMonthlyTotal] = useState<MonthlySalesTotal | null>(null);
+  const [monthlyTotalError, setMonthlyTotalError] = useState('');
   const isEditing = Boolean(editingSale);
+
+  useEffect(() => {
+    let cancelled = false;
+    setMonthlyTotalError('');
+    void getMonthlySalesTotal(summaryMonth)
+      .then((result) => { if (!cancelled) setMonthlyTotal(result); })
+      .catch((err) => { if (!cancelled) setMonthlyTotalError(err instanceof Error ? err.message : 'No se pudo cargar el total mensual'); });
+    return () => { cancelled = true; };
+  }, [summaryMonth, data]);
 
   const availableStock = stock.filter((item) => item.status === 'available');
   const availableProducts = useMemo(() => {
@@ -178,6 +192,10 @@ export function VentasPage() {
   return (
     <div className="page-stack">
       <PageHeader title="Ventas" action={<Button onClick={openCreateModal}><Plus size={14} /> Nueva venta</Button>} />
+      <div className="monthly-sales-card">
+        <div><div className="stat-label">Total de ventas por mes</div><div className="monthly-sales-values">{monthlyTotalError ? <span className="text-red">{monthlyTotalError}</span> : (['ARS', 'USD', 'CHL'] as Currency[]).map((currency) => <div key={currency}><CurrencyBadge>{currency}</CurrencyBadge><strong>{money(monthlyTotal?.byCurrency[currency] ?? 0)}</strong></div>)}</div><div className="monthly-sales-count">{monthlyTotal?.salesCount ?? 0} ventas registradas</div></div>
+        <label><span className="form-label">Mes</span><input className="form-input" type="month" value={summaryMonth} onChange={(event) => setSummaryMonth(event.target.value)} /></label>
+      </div>
       <Modal title={isEditing ? 'Editar venta' : 'Nueva venta'} open={open} onClose={() => setOpen(false)}>
         <form className="modal-form" onSubmit={handleSubmit} key={editingSale?.id ?? 'new-sale'}>
           <label><span className="form-label">Mayorista</span><select className="form-input" name="wholesalerId" defaultValue={editingSale?.wholesaler?.id ?? ''} required><option value="">Seleccionar mayorista</option>{wholesalers.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
@@ -257,6 +275,7 @@ export function VentasPage() {
                 <td>{money(sale.balanceAmount)}</td>
                 <td><Badge tone={paymentStatusTone(sale.status)}>{paymentStatusLabel(sale.status)}</Badge></td>
                 <td className="actions-col">
+                  <Button variant="outline" className="icon-btn" aria-label={`Ver venta ${index + 1}`} title="Ver detalle" onClick={() => navigate(`/ventas/${sale.id}`)}><Eye size={14} /></Button>
                   <Button variant="outline" className="icon-btn" aria-label={`Editar venta ${index + 1}`} title="Editar" onClick={() => openEditModal(sale)}>
                     <Pencil size={14} />
                   </Button>

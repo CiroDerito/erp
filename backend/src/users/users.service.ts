@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { User } from '../entities';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
+import { CreateAdminUserDto } from './dto/create-user-dto';
 
 @Injectable()
 export class UsersService implements OnModuleInit {
@@ -85,5 +86,21 @@ export class UsersService implements OnModuleInit {
     });
 
     await this.usersRepository.save(user);
+  }
+
+  async createAdmin(dto: CreateAdminUserDto) {
+    const existing = await this.findByEmail(dto.email);
+    if (existing) {
+      throw new ConflictException('Email is already in use');
+    }
+
+    const user = this.usersRepository.create({
+      name: dto.name.trim(),
+      email: dto.email.toLowerCase().trim(),
+      passwordHash: await bcrypt.hash(dto.password, 12),
+      isActive: true,
+    });
+
+    return this.usersRepository.save(user);
   }
 }

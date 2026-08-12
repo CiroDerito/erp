@@ -4,50 +4,50 @@ import { Currency } from '../../common/enums/currency.enum';
 import { StockStatus } from '../../common/enums/stock-status.enum';
 
 export class CreateStockItemDto {
-  @ApiProperty({ example: '356812345678901' })
+  @ApiProperty()
   @IsString()
   @MinLength(5)
   imei: string;
 
-  @ApiPropertyOptional({ example: '356812345678901' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   barcode?: string;
 
-  @ApiPropertyOptional({ example: '7f3d8f86-8e88-4f29-a8f4-1195f2d8b461' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   productId?: string;
 
-  @ApiPropertyOptional({ example: '7f3d8f86-8e88-4f29-a8f4-1195f2d8b466' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   purchaseItemId?: string;
 
-  @ApiPropertyOptional({ example: 'Samsung A15 128GB' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @MinLength(2)
   productName?: string;
 
-  @ApiPropertyOptional({ example: '7f3d8f86-8e88-4f29-a8f4-1195f2d8b462' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   supplierId?: string;
 
-  @ApiProperty({ example: '2026-05-28' })
+  @ApiProperty()
   @IsDateString()
   entryDate: string;
 
-  @ApiProperty({ example: '250000.00' })
+  @ApiProperty()
   @IsNumberString()
   costAmount: string;
 
-  @ApiProperty({ enum: Currency, example: Currency.ARS })
+  @ApiProperty({ enum: Currency })
   @IsEnum(Currency)
   costCurrency: Currency;
 
-  @ApiPropertyOptional({ enum: StockStatus, example: StockStatus.AVAILABLE })
+  @ApiPropertyOptional({ enum: StockStatus })
   @IsOptional()
   @IsEnum(StockStatus)
   status?: StockStatus;

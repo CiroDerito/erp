@@ -4,48 +4,48 @@ import { Currency } from '../../common/enums/currency.enum';
 import { PaymentMethod } from '../../common/enums/payment-method.enum';
 
 export class CreatePaymentDto {
-  @ApiPropertyOptional({ example: '7f3d8f86-8e88-4f29-a8f4-1195f2d8b464' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   wholesalerId?: string;
 
-  @ApiPropertyOptional({ example: '7f3d8f86-8e88-4f29-a8f4-1195f2d8b464' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   supplierId?: string;
 
-  @ApiPropertyOptional({ example: '7f3d8f86-8e88-4f29-a8f4-1195f2d8b465' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   saleId?: string;
 
-  @ApiPropertyOptional({ example: '7f3d8f86-8e88-4f29-a8f4-1195f2d8b465' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   purchaseId?: string;
 
-  @ApiProperty({ example: '2026-05-28' })
+  @ApiProperty()
   @IsDateString()
   paymentDate: string;
 
-  @ApiProperty({ example: '200000.00' })
+  @ApiProperty()
   @IsNumberString()
   amount: string;
 
-  @ApiProperty({ enum: Currency, example: Currency.ARS })
+  @ApiProperty({ enum: Currency })
   @IsEnum(Currency)
   currency: Currency;
 
-  @ApiPropertyOptional({ example: '1250.00' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumberString()
   usdRateArs?: string;
 
-  @ApiProperty({ enum: PaymentMethod, example: PaymentMethod.TRANSFER })
+  @ApiProperty({ enum: PaymentMethod })
   @IsEnum(PaymentMethod)
   method: PaymentMethod;
 
-  @ApiPropertyOptional({ example: 'Pago parcial acordado' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   observations?: string;

@@ -2,27 +2,27 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateProductDto {
-  @ApiProperty({ example: 'Samsung A15 128GB' })
+  @ApiProperty()
   @IsString()
   @MinLength(2)
   name: string;
 
-  @ApiPropertyOptional({ example: 'A15 128GB' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   model?: string;
 
-  @ApiPropertyOptional({ example: 'Samsung' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   brand?: string;
 
-  @ApiPropertyOptional({ example: 'Equipo nuevo liberado' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   description?: string;
 
-  @ApiPropertyOptional({ example: true, default: true })
+  @ApiPropertyOptional({ default: true })
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;

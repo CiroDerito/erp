@@ -16,6 +16,12 @@ export class WholesalersController {
     return this.wholesalersService.findAll(query);
   }
 
+  @ApiOperation({ summary: 'Obtener detalle de ventas y pagos del mayorista' })
+  @Get(':id/detail')
+  findDetail(@Param('id') id: string) {
+    return this.wholesalersService.findDetail(id);
+  }
+
   @ApiOperation({ summary: 'Obtener mayorista por id' })
   @Get(':id')
   findOne(@Param('id') id: string) {

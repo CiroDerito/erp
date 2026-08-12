@@ -1,11 +1,13 @@
-import { Pencil, Plus } from 'lucide-react';
+import { Eye, Pencil, Plus } from 'lucide-react';
 import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Currency, Purchase, Supplier, createResource, updateResource } from '../api/resources';
 import { useApiResource } from '../api/useApiResource';
 import { money, paymentStatusLabel, paymentStatusTone, shortDate } from '../shared/format';
 import { Badge, Button, CurrencyBadge, EmptyRow, Modal, PageHeader, StatCard, TableState } from '../shared/ui';
 
 export function ComprasPage() {
+  const navigate = useNavigate();
   const { data, loading, error, reload } = useApiResource<Purchase>('/purchases');
   const { data: suppliers } = useApiResource<Supplier>('/suppliers');
   const [open, setOpen] = useState(false);
@@ -146,6 +148,7 @@ export function ComprasPage() {
                 <td>{money(purchase.balanceAmount)}</td>
                 <td><Badge tone={paymentStatusTone(purchase.status)}>{paymentStatusLabel(purchase.status)}</Badge></td>
                 <td className="actions-col">
+                  <Button variant="outline" className="icon-btn" aria-label={`Ver compra ${index + 1}`} title="Ver detalle" onClick={() => navigate(`/compras/${purchase.id}`)}><Eye size={14} /></Button>
                   <Button variant="outline" className="icon-btn" aria-label={`Editar compra ${index + 1}`} title="Editar" onClick={() => openEditModal(purchase)}>
                     <Pencil size={14} />
                   </Button>

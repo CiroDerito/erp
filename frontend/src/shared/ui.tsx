@@ -1,8 +1,20 @@
 import { ButtonHTMLAttributes, ReactNode, useEffect } from 'react';
 
-export function StatCard({ label, value, tone, children }: { label: string; value: string; tone?: 'green' | 'amber' | 'red'; children?: ReactNode }) {
+export function StatCard({
+  label,
+  value,
+  tone,
+  className = '',
+  children,
+}: {
+  label: string;
+  value: string;
+  tone?: 'green' | 'amber' | 'red';
+  className?: string;
+  children?: ReactNode;
+}) {
   return (
-    <div className="stat-card">
+    <div className={`stat-card ${className}`}>
       <div className="stat-label">{label}</div>
       <div className={`stat-value ${tone ? `text-${tone}` : ''}`}>{value}</div>
       {children}

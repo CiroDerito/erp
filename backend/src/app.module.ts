@@ -9,11 +9,11 @@ import { PaymentsModule } from './payments/payments.module';
 import { ProductsModule } from './products/products.module';
 import { PurchasesModule } from './purchases/purchases.module';
 import { SalesModule } from './sales/sales.module';
-import { SeedModule } from './seed/seed.module';
 import { StockModule } from './stock/stock.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { UsersModule } from './users/users.module';
 import { WholesalersModule } from './wholesalers/wholesalers.module';
+import { CashControlModule } from './cash-control/cash-control.module';
 
 @Module({
   imports: [
@@ -30,7 +30,7 @@ import { WholesalersModule } from './wholesalers/wholesalers.module';
     SalesModule,
     PaymentsModule,
     DashboardModule,
-    SeedModule,
+    CashControlModule,
   ],
 })
 export class AppModule {}

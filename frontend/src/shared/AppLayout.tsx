@@ -8,6 +8,7 @@ import {
   ShoppingBag,
   Store,
   Truck,
+  Wallet,
 } from 'lucide-react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../modules/auth/AuthProvider';
@@ -20,6 +21,7 @@ const navItems = [
   { to: '/mayoristas', label: 'Mayoristas', icon: Store },
   { to: '/proveedores', label: 'Proveedores', icon: Truck },
   { to: '/pagos', label: 'Pagos', icon: CreditCard },
+  { to: '/caja', label: 'Caja', icon: Wallet },
 ];
 
 const titles: Record<string, string> = {
@@ -30,12 +32,13 @@ const titles: Record<string, string> = {
   '/mayoristas': 'Mayoristas',
   '/proveedores': 'Proveedores',
   '/pagos': 'Pagos',
+  '/caja': 'Control de caja',
 };
 
 export function AppLayout() {
   const { user, logout } = useAuth();
   const location = useLocation();
-  const title = titles[location.pathname] ?? 'ERP Comercial';
+  const title = titles[location.pathname] ?? 'Sistema de control';
 
   return (
     <div className="app-shell">
@@ -45,7 +48,7 @@ export function AppLayout() {
             <BarChart3 size={17} />
           </div>
           <div>
-            <div className="logo-text">ERP Comercial</div>
+            <div className="logo-text">Sistema de control</div>
             <div className="logo-sub">Sistema de gestion</div>
           </div>
         </div>

@@ -18,7 +18,7 @@ export class PurchasesService {
 
   async findAll(query: PaginationQueryDto) {
     const [data, total] = await this.purchasesRepository.findAndCount({
-      relations: { supplier: true, items: { product: true, stockItems: true } },
+      relations: { supplier: true, items: { product: true, stockItems: true }, payments: true },
       order: { purchaseDate: 'DESC', createdAt: 'DESC' },
       skip: (query.page - 1) * query.limit,
       take: query.limit,
@@ -30,7 +30,7 @@ export class PurchasesService {
   async findOne(id: string) {
     const purchase = await this.purchasesRepository.findOne({
       where: { id },
-      relations: { supplier: true, items: { product: true, stockItems: true } },
+      relations: { supplier: true, items: { product: true, stockItems: true }, payments: true },
     });
     if (!purchase) {
       throw new NotFoundException('Compra no encontrada');

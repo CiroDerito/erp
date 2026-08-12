@@ -53,8 +53,14 @@ export type StockItem = {
     product?: Product | null;
     purchase?: {
       id: string;
+      purchaseDate?: string;
+      currency?: Currency;
       supplier?: Supplier | null;
     } | null;
+  } | null;
+  saleItem?: {
+    id: string;
+    sale?: Sale | null;
   } | null;
 };
 
@@ -69,6 +75,19 @@ export type Sale = {
   status: PaymentStatus;
   notes?: string | null;
   wholesaler?: Wholesaler | null;
+  items?: SaleItem[];
+  payments?: Payment[];
+};
+
+export type SaleItem = {
+  id: string;
+  quantity: number;
+  unitPrice: string;
+  subtotalAmount: string;
+  isExternalProduct: boolean;
+  externalProductName?: string | null;
+  product?: Product | null;
+  stockItem?: StockItem | null;
 };
 
 export type Purchase = {
@@ -81,6 +100,7 @@ export type Purchase = {
   status: PaymentStatus;
   notes?: string | null;
   supplier?: Supplier | null;
+  payments?: Payment[];
   items?: Array<{
     id: string;
     quantity: number;
@@ -106,7 +126,15 @@ export type Payment = {
   purchase?: Purchase | null;
 };
 
+export type WholesalerDetail = {
+  wholesaler: Wholesaler;
+  totals: Partial<Record<Currency, { sold: string; paid: string; balance: string }>>;
+  sales: Sale[];
+  payments: Payment[];
+};
+
 export type DashboardSummary = {
+  month: string;
   totalSold: string;
   totalPurchased: string;
   profit: string;
@@ -114,6 +142,8 @@ export type DashboardSummary = {
   salesCount: number;
   purchasesCount: number;
   byCurrency: Record<Currency, { sold: string; purchased: string; pending: string }>;
+  activeBreakdown: Record<Currency, { cash: string; bank: string; currentAccount: string; stock: string; total: string }>;
+  capitalInitial: Record<Currency, { cash: string; bank: string; currentAccount: string; stock: string; total: string }>;
   overdueWholesalers: Array<{
     wholesalerId: string;
     name: string;
@@ -122,8 +152,40 @@ export type DashboardSummary = {
   }>;
 };
 
+export type MonthlySalesTotal = {
+  month: string;
+  salesCount: number;
+  byCurrency: Partial<Record<Currency, string>>;
+};
+
+export type CashControlSummary = {
+  date: string;
+  month: string;
+  initialCapital: Record<Currency, string>;
+  dailyIncome: Record<Currency, string>;
+  dailyExpense: Record<Currency, string>;
+  closingToDay: Record<Currency, string>;
+  monthClosing: Record<Currency, string>;
+  capitalInitialBreakdown: CapitalBreakdown;
+  capitalBreakdown: CapitalBreakdown;
+  sales: Payment[];
+  purchases: Payment[];
+};
+
+export type CapitalBreakdown = {
+  cash: Record<Currency, string>;
+  bank: Record<Currency, string>;
+  currentAccount: Record<Currency, string>;
+  stock: Record<Currency, string>;
+  total: Record<Currency, string>;
+};
+
 export function getResource<T>(path: string) {
   return apiRequest<PaginatedResponse<T>>(path);
+}
+
+export function getOne<T>(path: string) {
+  return apiRequest<T>(path);
 }
 
 export function createResource<T, TPayload extends object>(path: string, payload: TPayload) {
@@ -140,6 +202,14 @@ export function updateResource<T, TPayload extends object>(path: string, payload
   });
 }
 
-export function getDashboard() {
-  return apiRequest<DashboardSummary>('/dashboard');
+export function getDashboard(month?: string) {
+  return apiRequest<DashboardSummary>(`/dashboard${month ? `?month=${encodeURIComponent(month)}` : ''}`);
+}
+
+export function getMonthlySalesTotal(month: string) {
+  return apiRequest<MonthlySalesTotal>(`/sales/monthly-total?month=${encodeURIComponent(month)}`);
+}
+
+export function getCashControl(date: string) {
+  return apiRequest<CashControlSummary>(`/cash-control?date=${encodeURIComponent(date)}`);
 }

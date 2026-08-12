@@ -16,6 +16,12 @@ export class SalesController {
     return this.salesService.findAll(query);
   }
 
+  @ApiOperation({ summary: 'Obtener total de ventas del mes agrupado por moneda' })
+  @Get('monthly-total')
+  getMonthlyTotal(@Query('month') month?: string) {
+    return this.salesService.getMonthlyTotal(month);
+  }
+
   @ApiOperation({ summary: 'Obtener venta por id' })
   @Get(':id')
   findOne(@Param('id') id: string) {

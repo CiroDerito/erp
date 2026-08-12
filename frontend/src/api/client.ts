@@ -3,7 +3,7 @@ export type ApiError = {
   statusCode?: number;
 };
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_BASE ?? '/api';
 
 function translateApiMessage(message?: string | string[]) {
   const rawMessage = Array.isArray(message) ? message.join('. ') : message;

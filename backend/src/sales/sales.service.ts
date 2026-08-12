@@ -27,6 +27,29 @@ export class SalesService {
     return { data, total, page: query.page, limit: query.limit };
   }
 
+  async getMonthlyTotal(month?: string) {
+    const selectedMonth = /^\d{4}-\d{2}$/.test(month ?? '') ? month! : new Date().toISOString().slice(0, 7);
+    const [year, monthNumber] = selectedMonth.split('-').map(Number);
+    const start = `${selectedMonth}-01`;
+    const end = `${year}-${String(monthNumber + 1).padStart(2, '0')}-01`;
+    const normalizedEnd = monthNumber === 12 ? `${year + 1}-01-01` : end;
+
+    const rows = await this.salesRepository.createQueryBuilder('sale')
+      .select('sale.currency', 'currency')
+      .addSelect('COUNT(sale.id)', 'salesCount')
+      .addSelect('COALESCE(SUM(sale.total_amount), 0)', 'total')
+      .where('sale.sale_date >= :start', { start })
+      .andWhere('sale.sale_date < :end', { end: normalizedEnd })
+      .groupBy('sale.currency')
+      .getRawMany<{ currency: string; salesCount: string; total: string }>();
+
+    return {
+      month: selectedMonth,
+      salesCount: rows.reduce((sum, row) => sum + Number(row.salesCount), 0),
+      byCurrency: Object.fromEntries(rows.map((row) => [row.currency, Number(row.total).toFixed(2)])),
+    };
+  }
+
   async findOne(id: string) {
     const sale = await this.salesRepository.findOne({
       where: { id },

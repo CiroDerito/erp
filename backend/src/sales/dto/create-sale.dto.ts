@@ -16,70 +16,70 @@ import {
 import { Currency } from '../../common/enums/currency.enum';
 
 export class CreateSaleItemDto {
-  @ApiPropertyOptional({ example: '7f3d8f86-8e88-4f29-a8f4-1195f2d8b463' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   stockItemId?: string;
 
-  @ApiPropertyOptional({ example: '356812345678901' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   stockItemImei?: string;
 
-  @ApiPropertyOptional({ example: '7f3d8f86-8e88-4f29-a8f4-1195f2d8b461' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   productId?: string;
 
-  @ApiPropertyOptional({ example: 'Producto externo' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   externalProductName?: string;
 
-  @ApiPropertyOptional({ example: false })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
   isExternalProduct?: boolean;
 
-  @ApiProperty({ example: 1, minimum: 1 })
+  @ApiProperty({ minimum: 1 })
   @Type(() => Number)
   @Min(1)
   quantity: number;
 
-  @ApiProperty({ example: '350000.00' })
+  @ApiProperty()
   @IsNumberString()
   unitPrice: string;
 }
 
 export class CreateSaleDto {
-  @ApiProperty({ example: '7f3d8f86-8e88-4f29-a8f4-1195f2d8b464' })
+  @ApiProperty()
   @IsUUID()
   wholesalerId: string;
 
-  @ApiProperty({ example: '2026-05-28' })
+  @ApiProperty()
   @IsDateString()
   saleDate: string;
 
-  @ApiPropertyOptional({ example: '2026-06-04' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsDateString()
   dueDate?: string;
 
-  @ApiProperty({ enum: Currency, example: Currency.ARS })
+  @ApiProperty({ enum: Currency })
   @IsEnum(Currency)
   currency: Currency;
 
-  @ApiPropertyOptional({ example: '150000.00' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumberString()
   paidAmount?: string;
 
-  @ApiPropertyOptional({ example: '0.00' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumberString()
   discountAmount?: string;
 
-  @ApiPropertyOptional({ example: 'Venta parcial' })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   notes?: string;

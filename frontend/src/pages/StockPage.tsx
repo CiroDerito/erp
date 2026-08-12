@@ -1,20 +1,34 @@
-import { Pencil, Plus, ScanLine } from 'lucide-react';
-import { FormEvent, useMemo, useRef, useState } from 'react';
+import { Camera, ListFilter, Pencil, Plus } from 'lucide-react';
+import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Currency, Purchase, StockItem, StockStatus, Supplier, createResource, updateResource } from '../api/resources';
 import { useApiResource } from '../api/useApiResource';
 import { money, shortDate, stockStatusLabel, stockStatusTone } from '../shared/format';
-import { Badge, Button, CurrencyBadge, EmptyRow, PageHeader, StatCard, TableState } from '../shared/ui';
+import { Badge, Button, CurrencyBadge, EmptyRow, Modal, PageHeader, StatCard, TableState } from '../shared/ui';
+
+type DetectedBarcode = { rawValue: string };
+type BarcodeDetectorInstance = { detect(source: HTMLVideoElement): Promise<DetectedBarcode[]> };
+type BarcodeDetectorConstructor = new (options?: { formats?: string[] }) => BarcodeDetectorInstance;
 
 export function StockPage() {
+  const navigate = useNavigate();
   const { data: stock, loading, error, reload } = useApiResource<StockItem>('/stock');
-  const { data: purchases } = useApiResource<Purchase>('/purchases');
+  const { data: purchases, reload: reloadPurchases } = useApiResource<Purchase>('/purchases');
   const { data: suppliers } = useApiResource<Supplier>('/suppliers');
   const [scannedImei, setScannedImei] = useState('');
   const [showForm, setShowForm] = useState(true);
   const [editingStockItem, setEditingStockItem] = useState<StockItem | null>(null);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
+  const [selectedPendingItemId, setSelectedPendingItemId] = useState('');
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [scannerError, setScannerError] = useState('');
+  const [stockingScan, setStockingScan] = useState(false);
   const scannerInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const cameraStreamRef = useRef<MediaStream | null>(null);
+  const scanFrameRef = useRef<number | null>(null);
+  const lastDetectedRef = useRef('');
   const isEditing = Boolean(editingStockItem);
 
   const summary = useMemo(() => ({
@@ -32,6 +46,118 @@ export function StockPage() {
       })),
     ).filter((item) => item.pending > 0);
   }, [purchases]);
+
+  const selectedPendingItem = pendingPurchaseItems.find((item) => item.id === selectedPendingItemId);
+
+  useEffect(() => {
+    if (!pendingPurchaseItems.length) {
+      setSelectedPendingItemId('');
+      return;
+    }
+    if (!pendingPurchaseItems.some((item) => item.id === selectedPendingItemId)) {
+      setSelectedPendingItemId(pendingPurchaseItems[0].id);
+    }
+  }, [pendingPurchaseItems, selectedPendingItemId]);
+
+  function stopCamera() {
+    if (scanFrameRef.current !== null) cancelAnimationFrame(scanFrameRef.current);
+    scanFrameRef.current = null;
+    cameraStreamRef.current?.getTracks().forEach((track) => track.stop());
+    cameraStreamRef.current = null;
+    if (videoRef.current) videoRef.current.srcObject = null;
+    setCameraOpen(false);
+  }
+
+  useEffect(() => () => stopCamera(), []);
+
+  async function stockScannedCode(rawCode: string) {
+    const code = rawCode.trim();
+    if (!code || stockingScan) return;
+    if (!selectedPendingItem) {
+      setScannerError('Selecciona un producto pendiente de stockear');
+      return;
+    }
+    setStockingScan(true);
+    setScannerError('');
+    try {
+      await createResource<StockItem, object>('/stock', {
+        imei: code,
+        barcode: code,
+        purchaseItemId: selectedPendingItem.id,
+        entryDate: new Date().toISOString().slice(0, 10),
+        costAmount: selectedPendingItem.unitCost,
+        costCurrency: selectedPendingItem.purchase.currency,
+        status: 'available',
+      });
+      setScannedImei(code);
+      stopCamera();
+      await Promise.all([reload(), reloadPurchases()]);
+    } catch (err) {
+      setScannerError(err instanceof Error ? err.message : 'No se pudo stockear el código leído');
+      lastDetectedRef.current = '';
+    } finally {
+      setStockingScan(false);
+    }
+  }
+
+  async function openCameraScanner() {
+    if (!selectedPendingItem) {
+      setScannerError('No hay productos pendientes de stockear');
+      return;
+    }
+    setScannerError('');
+    lastDetectedRef.current = '';
+    setCameraOpen(true);
+  }
+
+  useEffect(() => {
+    if (!cameraOpen) return undefined;
+    let cancelled = false;
+
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+        if (cancelled) { stream.getTracks().forEach((track) => track.stop()); return; }
+        cameraStreamRef.current = stream;
+        const video = videoRef.current;
+        if (!video) return;
+        video.srcObject = stream;
+        await video.play();
+
+        const Detector = (window as unknown as { BarcodeDetector?: BarcodeDetectorConstructor }).BarcodeDetector;
+        if (!Detector) {
+          setScannerError('Este navegador no permite detección automática. Usa Chrome/Edge actualizado o la entrada manual.');
+          return;
+        }
+        const detector = new Detector({ formats: ['code_128', 'code_39', 'ean_13', 'ean_8', 'qr_code', 'data_matrix'] });
+        const detect = async () => {
+          if (cancelled || video.readyState < 2) return;
+          try {
+            const codes = await detector.detect(video);
+            const value = codes[0]?.rawValue?.trim();
+            if (value && value !== lastDetectedRef.current) {
+              lastDetectedRef.current = value;
+              await stockScannedCode(value);
+              return;
+            }
+          } catch { /* Se reintenta en el siguiente cuadro. */ }
+          if (!cancelled) scanFrameRef.current = requestAnimationFrame(() => void detect());
+        };
+        scanFrameRef.current = requestAnimationFrame(() => void detect());
+      } catch (err) {
+        setScannerError(err instanceof Error ? `No se pudo abrir la cámara: ${err.message}` : 'No se pudo abrir la cámara');
+      }
+    }
+    void startCamera();
+    return () => { cancelled = true; };
+  }, [cameraOpen]);
+
+  function handleScannerKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      void stockScannedCode(scannedImei);
+    }
+  }
 
   function openCreateForm() {
     setEditingStockItem(null);
@@ -83,7 +209,16 @@ export function StockPage() {
 
   return (
     <div className="page-stack">
-      <PageHeader title="Stock" action={<Button onClick={openCreateForm}><Plus size={14} /> Agregar producto</Button>} />
+      <PageHeader title="Stock" action={<><Button variant="outline" onClick={() => navigate('/stock/detalle')}><ListFilter size={14} /> Ver detalle</Button><Button onClick={openCreateForm}><Plus size={14} /> Agregar producto</Button></>} />
+      <Modal title="Escanear IMEI o código de barras" open={cameraOpen} onClose={stopCamera}>
+        <div className="camera-scanner">
+          <video ref={videoRef} className="camera-preview" playsInline muted />
+          <div className="camera-target"><span /></div>
+          <div className="camera-help">Apunta al código de <strong>{selectedPendingItem?.product?.name ?? 'producto'}</strong>. Se agregará al stock automáticamente.</div>
+          {stockingScan && <div className="scanner-saving">Código detectado, guardando...</div>}
+          {scannerError && <div className="form-error">{scannerError}</div>}
+        </div>
+      </Modal>
       <div className="stock-summary-grid">
         <div className="scanner-card">
           <div>
@@ -91,18 +226,24 @@ export function StockPage() {
             <div className="scanner-title">Leer IMEI o codigo de barras</div>
           </div>
           <div className="scanner-actions">
-            <Button onClick={() => scannerInputRef.current?.focus()}><ScanLine size={14} /> Capturar scan</Button>
+            <Button onClick={() => void openCameraScanner()} disabled={!pendingPurchaseItems.length || stockingScan}><Camera size={14} /> Abrir cámara</Button>
             <input
               ref={scannerInputRef}
               className="form-input mono-input"
-              placeholder="Click aqui y escanea con la pistola o escribe manualmente"
+              placeholder="Escanea con pistola, escribe y presiona Enter"
               value={scannedImei}
               onChange={(event) => setScannedImei(event.target.value)}
+              onKeyDown={handleScannerKeyDown}
             />
           </div>
+          <select className="form-input scanner-product-select" value={selectedPendingItemId} onChange={(event) => setSelectedPendingItemId(event.target.value)} disabled={!pendingPurchaseItems.length}>
+            {!pendingPurchaseItems.length && <option value="">No hay productos pendientes</option>}
+            {pendingPurchaseItems.map((item) => <option key={item.id} value={item.id}>{item.product?.name ?? 'Producto'} · {item.purchase.supplier?.name ?? 'Proveedor'} · pendientes {item.pending}</option>)}
+          </select>
+          {scannerError && !cameraOpen && <div className="scanner-inline-error">{scannerError}</div>}
           <div className="scanner-status">
             <span>Ultimo codigo leido</span>
-            <strong>{scannedImei || 'Sin lectura'}</strong>
+            <strong>{stockingScan ? 'Guardando...' : scannedImei || 'Sin lectura'}</strong>
           </div>
         </div>
         <StatCard label="En stock" value={String(summary.available)} />
@@ -120,20 +261,24 @@ export function StockPage() {
             <span className="form-label">IMEI</span>
             <input className="form-input mono-input" name="imei" placeholder="IMEI" value={scannedImei} onChange={(event) => setScannedImei(event.target.value)} required minLength={5} />
           </label>
-          <label>
-            <span className="form-label">Producto</span>
-            <select className="form-input" name="purchaseItemId" defaultValue={editingStockItem?.purchaseItem?.id ?? ''} required disabled={isEditing}>
-              <option value="">Seleccionar producto</option>
-              {isEditing && editingStockItem?.purchaseItem ? (
-                <option value={editingStockItem.purchaseItem.id}>{editingStockItem.product?.name ?? 'Producto'} - compra actual</option>
-              ) : null}
-              {pendingPurchaseItems.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.product?.name ?? 'Producto'} - {item.purchase.supplier?.name ?? 'Proveedor'} - por stockear {item.pending}
-                </option>
-              ))}
-            </select>
-          </label>
+          {isEditing ? (
+            <label>
+              <span className="form-label">Producto</span>
+              <input className="form-input" value={editingStockItem?.product?.name ?? 'Producto'} readOnly />
+            </label>
+          ) : (
+            <label>
+              <span className="form-label">Producto</span>
+              <select className="form-input" name="purchaseItemId" defaultValue="" required>
+                <option value="">Seleccionar producto</option>
+                {pendingPurchaseItems.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.product?.name ?? 'Producto'} - {item.purchase.supplier?.name ?? 'Proveedor'} - por stockear {item.pending}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <label>
             <span className="form-label">Proveedor</span>
             <select className="form-input" name="supplierId" defaultValue={editingStockItem?.supplier?.id ?? ''}>
@@ -156,6 +301,7 @@ export function StockPage() {
             <select className="form-input" name="status" defaultValue={editingStockItem?.status ?? 'available'}>
               <option value="available">Disponible</option>
               <option value="reserved">Reservado</option>
+              <option value="sold">Vendido</option>
               <option value="inactive">Inactivo</option>
             </select>
           </label>

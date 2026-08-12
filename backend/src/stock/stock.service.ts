@@ -31,6 +31,10 @@ export class StockService {
       baseWhere.product = { id: query.productId };
     }
 
+    if (query.supplierId) {
+      baseWhere.supplier = { id: query.supplierId };
+    }
+
     if (query.search) {
       where.push(
         { ...baseWhere, imei: ILike(`%${query.search}%`) },
@@ -41,7 +45,7 @@ export class StockService {
 
     const [data, total] = await this.stockRepository.findAndCount({
       where: where.length ? where : baseWhere,
-      relations: { product: true, supplier: true, purchaseItem: { product: true, purchase: { supplier: true } } },
+      relations: { product: true, supplier: true, purchaseItem: { product: true, purchase: { supplier: true } }, saleItem: { sale: { wholesaler: true } } },
       order: { entryDate: 'DESC', createdAt: 'DESC' },
       skip: (query.page - 1) * query.limit,
       take: query.limit,
@@ -53,7 +57,7 @@ export class StockService {
   async findOne(id: string) {
     const stockItem = await this.stockRepository.findOne({
       where: { id },
-      relations: { product: true, supplier: true, purchaseItem: { product: true, purchase: { supplier: true } } },
+      relations: { product: true, supplier: true, purchaseItem: { product: true, purchase: { supplier: true } }, saleItem: { sale: { wholesaler: true } } },
     });
 
     if (!stockItem) {

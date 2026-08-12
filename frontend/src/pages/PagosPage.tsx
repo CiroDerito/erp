@@ -12,8 +12,8 @@ export function PagosPage() {
   const { data: sales } = useApiResource<Sale>('/sales');
   const { data: purchases } = useApiResource<Purchase>('/purchases');
   const [targetType, setTargetType] = useState<'sale' | 'purchase'>('sale');
-  const [amount, setAmount] = useState('200000');
-  const [usdRateArs, setUsdRateArs] = useState('1250');
+  const [amount, setAmount] = useState('');
+  const [usdRateArs, setUsdRateArs] = useState('');
   const [currency, setCurrency] = useState<Currency>('ARS');
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
@@ -53,8 +53,8 @@ export function PagosPage() {
         observations: String(form.get('observations') ?? ''),
       });
       formElement.reset();
-      setAmount('0');
-      setUsdRateArs('0');
+      setAmount('');
+      setUsdRateArs('');
       setCurrency('ARS');
       setTargetType('sale');
       await reload();

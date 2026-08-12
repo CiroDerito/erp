@@ -7,11 +7,16 @@ import { AppLayout } from './shared/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
 import { LoginPage } from './pages/LoginPage';
 import { MayoristasPage } from './pages/MayoristasPage';
+import { MayoristaDetallePage } from './pages/MayoristaDetallePage';
 import { PagosPage } from './pages/PagosPage';
 import { ProveedoresPage } from './pages/ProveedoresPage';
 import { StockPage } from './pages/StockPage';
+import { StockDetallePage } from './pages/StockDetallePage';
 import { VentasPage } from './pages/VentasPage';
 import { ComprasPage } from './pages/ComprasPage';
+import { VentaDetallePage } from './pages/VentaDetallePage';
+import { CompraDetallePage } from './pages/CompraDetallePage';
+import { CajaPage } from './pages/CajaPage';
 import './styles.css';
 
 const router = createBrowserRouter([
@@ -27,11 +32,16 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: 'dashboard', element: <DashboardPage /> },
       { path: 'ventas', element: <VentasPage /> },
+      { path: 'ventas/:id', element: <VentaDetallePage /> },
       { path: 'compras', element: <ComprasPage /> },
+      { path: 'compras/:id', element: <CompraDetallePage /> },
       { path: 'stock', element: <StockPage /> },
+      { path: 'stock/detalle', element: <StockDetallePage /> },
       { path: 'mayoristas', element: <MayoristasPage /> },
+      { path: 'mayoristas/:id', element: <MayoristaDetallePage /> },
       { path: 'proveedores', element: <ProveedoresPage /> },
       { path: 'pagos', element: <PagosPage /> },
+      { path: 'caja', element: <CajaPage /> },
     ],
   },
 ]);

@@ -1,10 +1,12 @@
-import { Pencil, Plus, RefreshCw } from 'lucide-react';
+import { Eye, Pencil, Plus, RefreshCw } from 'lucide-react';
 import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Wholesaler, createResource, updateResource } from '../api/resources';
 import { useApiResource } from '../api/useApiResource';
 import { Badge, Button, EmptyRow, Modal, PageHeader, TableState } from '../shared/ui';
 
 export function MayoristasPage() {
+  const navigate = useNavigate();
   const { data, loading, error, reload } = useApiResource<Wholesaler>('/wholesalers');
   const [open, setOpen] = useState(false);
   const [editingWholesaler, setEditingWholesaler] = useState<Wholesaler | null>(null);
@@ -95,6 +97,9 @@ export function MayoristasPage() {
                 <td>{wholesaler.email ?? '-'}</td>
                 <td><Badge tone={wholesaler.isActive ? 'green' : 'red'}>{wholesaler.isActive ? 'Activo' : 'Inactivo'}</Badge></td>
                 <td className="actions-col">
+                  <Button variant="outline" className="icon-btn" aria-label={`Ver detalle de ${wholesaler.name}`} title="Ver detalle" onClick={() => navigate(`/mayoristas/${wholesaler.id}`)}>
+                    <Eye size={14} />
+                  </Button>
                   <Button variant="outline" className="icon-btn" aria-label={`Editar ${wholesaler.name}`} title="Editar" onClick={() => openEditModal(wholesaler)}>
                     <Pencil size={14} />
                   </Button>
